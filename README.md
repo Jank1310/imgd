@@ -16,3 +16,8 @@ To run tests use `npm test` or `npm run test:watch` if you want to run the test 
 * Channel names are saved in a **set**. 
 * Post details are saved in a **hash**.
 * Post id are saved in a **sorted set** to support easy paging
+
+### Users
+
+* User details are saved in a **hash**.
+* Do find an user by email a **hash** with USERMAIL USERID is used.
