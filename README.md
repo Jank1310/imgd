@@ -1,13 +1,11 @@
 # imgd-backend
-Simple combination between instagram and reddit. Project to refresh redis, node and react skills
+Redis and react based image board + api. Mainly a project to improve redis, node and react skills :-)
 
 ## Run develop
 To start a hot reload dev server use `grunt serve`
 
 ## Run tests
 To run tests use `npm test` or `npm run test:watch` if you want to run the test after saving.
-
-
 
 ## Redis structure
 
