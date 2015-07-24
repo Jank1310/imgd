@@ -4,16 +4,23 @@
   "description": "",
   "repository": "",
   "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
   "src": "src",
   "test": "test",
   "dist": "dist",
   "mainInput": "main",
   "mainOutput": "main",
   "dependencies": {
+    "async": "^1.4.0",
+    "body-parser": "^1.13.2",
     "express": "^4.13.1",
+    "moment": "^2.10.3",
     "normalize.css": "~3.0.3",
     "react": "0.13.x",
     "react-router": "0.13.x",
+    "redis": "^0.12.1",
     "reflux": "^0.2.7"
   },
   "devDependencies": {

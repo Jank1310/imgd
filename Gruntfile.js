@@ -39,14 +39,15 @@ module.exports = function (grunt) {
       dev: {
          script: 'server.js',
          options: {
-           watch: ['server.js']
+           watch: ['server.js'],
+           env: {'DEBUG': 'express:*'}
          }
       }
     },
 
     open: {
       options: {
-        delay: 500
+        delay: 1000
       },
       dev: {
         path: 'http://localhost:3000/webpack-dev-server/'
@@ -95,10 +96,16 @@ module.exports = function (grunt) {
     },
 
     concurrent: {
-       dev: ['webpack-dev-server', 'nodemon:dev']
+       dev: {
+         tasks: ['webpack-dev-server', 'nodemon:dev'],
+         options: {
+                logConcurrentOutput: true
+            }
+       }
    }
   });
 
+  grunt.loadNpmTasks('grunt-concurrent');
   grunt.registerTask('serve', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'open:dist', 'nodemon:dev']);
