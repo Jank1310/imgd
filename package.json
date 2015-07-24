@@ -5,7 +5,9 @@
   "repository": "",
   "private": true,
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "mocha test/modules/ --recursive",
+    "test:watch": "mocha test/modules/ --recursive --watch"
   },
   "src": "src",
   "test": "test",
@@ -21,7 +23,9 @@
     "react": "0.13.x",
     "react-router": "0.13.x",
     "redis": "^0.12.1",
-    "reflux": "^0.2.7"
+    "reflux": "^0.2.7",
+    "validate": "^2.1.6",
+    "validate.io-safe-integer": "^1.0.1"
   },
   "devDependencies": {
     "babel": "^5.0.0",

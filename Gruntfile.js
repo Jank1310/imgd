@@ -39,7 +39,7 @@ module.exports = function (grunt) {
       dev: {
          script: 'server.js',
          options: {
-           watch: ['server.js'],
+           watch: ['server.js', 'src/modules/'],
            env: {'DEBUG': 'express:*'}
          }
       }
