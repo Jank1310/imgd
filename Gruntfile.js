@@ -37,9 +37,9 @@ module.exports = function (grunt) {
 
     nodemon: {
       dev: {
-         script: 'server.js',
+         script: 'main.js',
          options: {
-           watch: ['server.js', 'src/modules/'],
+           watch: ['main.js', 'src/modules/'],
            env: {'DEBUG': 'express:*'}
          }
       }

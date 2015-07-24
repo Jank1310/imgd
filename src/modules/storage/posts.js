@@ -1,3 +1,5 @@
+'use strict';
+
 var redisConfig = require('./redisConfiguration');
 var moment = require('moment');
 var async = require('async');
@@ -10,7 +12,7 @@ var posts = function(redisClient) {
       redisClient.incr(redisConfig.POSTS_ID_KEY, function(err, postId) {
         if(err) { return cb(err); }
         //use post content to prevent unwanted key from req.body
-        postContent = {
+        var postContent = {
           'id': postId,
           'message': post.message,
           'created': ts
@@ -35,7 +37,6 @@ var posts = function(redisClient) {
         postCount = postCount < 100 ? postCount : 100; //limit post count to 100
       }
       var postsSSet = redisConfig.CHANNEL_POST_IDS_PREFIX_SSET + channel;
-      console.log('Get posts of channel: ' + channel + ' before: ' + before + ' posts: ' + postCount);
       redisClient.zrevrangebyscore(postsSSet, '(' + before, '-inf', 'LIMIT', '0', postCount, function(err, postIds) {
         if(err) {
           return cb(err);

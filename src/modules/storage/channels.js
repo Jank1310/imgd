@@ -1,10 +1,13 @@
+'use strict';
+
 var redisConfig = require('./redisConfiguration');
 
 var channels = function(redisClient) {
   return {
     channelExists: function(channel, cb) {
         redisClient.sismember(redisConfig.CHANNELS_SET, channel, function(err, result) {
-          return cb(err, result);
+          var exists = result === 1;
+          return cb(err, exists);
         });
     },
 
