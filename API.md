@@ -31,8 +31,8 @@ Returns the version of the api.
 + Request (application/json)
 
         {
-          "username": "Jon Doe"
-          "email": "jondoe@internt.com",
+          "username": "Jon Doe",
+          "email": "jondoe@internet.com",
           "password": "some secret password"
         }
 
@@ -44,6 +44,35 @@ Returns the version of the api.
               "email": "jondoe@zirkel.io"
             }
 
++ Response 400
+Response if email address is not correctly formed
+
+  + Body
+
+    {
+      "error":"email malformed",
+      "errorCode": 1
+    }
+
++ Response 400
+Response if password is to short N < 4
+
+  + Body
+
+    {
+      "error":"Password malformed. Minimum 4 digits. Maximum 50 digits.",
+      "errorCode": 2
+    }
+
++ Response 400
+Response if the username is to short or to long 3 <= N <= 15
+
+  + Body
+
+    {
+      "error":"Username malformed. Minimum length: 3. Maximum length: 50.",
+      "errorCode": 3
+    }
 
 + Response 409
 Response if given email is already registered.

@@ -32,7 +32,7 @@ describe('channelRoutes', function() {
           .send(postContent)
           .end(function(err, res){
             assert.equal(res.status, 201);
-            assert.equal(res.body.message, postContent.message);
+            assert.deepEqual(res.body.message, postContent.message);
             request(app)
                   .get('/c/someChannel3')
                   .expect('Content-Type', /json/)
