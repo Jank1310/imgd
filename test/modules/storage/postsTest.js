@@ -4,7 +4,7 @@ var async = require('async');
 var posts = require('../../../src/modules/storage/posts.js')(redisClient);
 
 
-describe('channels', function() {
+describe('posts', function() {
   beforeEach(function(cb) {
     redisClient.select(2, function(err) {
       assert.ifError(err);

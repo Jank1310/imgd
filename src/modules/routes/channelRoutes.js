@@ -13,7 +13,6 @@ module.exports = function(channels, posts) {
         if(exists === true) {
           posts.getPostsOfChannel(req.params.channel, req.query.before, req.query.count, function(_err, postsArray) {
             if(_err) {
-              console.err('Request: ' + req.path + ' error: ' + err);
               return res.status(500).send('Something broke!');
             }
             return res.json({posts: postsArray});
@@ -29,7 +28,6 @@ module.exports = function(channels, posts) {
         var createPost = function() {
           posts.addPostToChannel(req.params.channel, req.body, function(err, newPost) {
             if(err) { return serverError(); }
-            console.log("res", newPost);
             return res.status(201).send(newPost);
           });
         };

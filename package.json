@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node main.js",
     "test": "mocha test/modules/ --recursive",
-    "test:watch": "mocha test/modules/ --recursive --watch"
+    "test:watch": "mocha test/modules/ --recursive --watch",
+    "apiDoc": "aglio -i API.md -s -p 3333"
   },
   "src": "src",
   "test": "test",
@@ -16,14 +17,18 @@
   "mainOutput": "main",
   "dependencies": {
     "async": "^1.4.0",
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.13.2",
     "express": "^4.13.1",
     "moment": "^2.10.3",
+    "node-uuid": "^1.4.3",
     "normalize.css": "~3.0.3",
     "react": "0.13.x",
     "react-router": "0.13.x",
     "redis": "^0.12.1",
     "reflux": "^0.2.7",
+    "sha1": "^1.1.1",
+    "underscore": "^1.8.3",
     "validate": "^2.1.6",
     "validate.io-safe-integer": "^1.0.1"
   },
