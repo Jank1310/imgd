@@ -27,7 +27,7 @@ module.exports = function (grunt) {
         webpack: webpackDevConfig,
         publicPath: '/assets/',
         contentBase: './<%= pkg.src %>/',
-        proxy: { '/c/*': 'http://localhost:8080' }
+        proxy: { '/api/*': 'http://localhost:8080' }
       },
 
       start: {

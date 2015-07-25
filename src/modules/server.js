@@ -13,16 +13,19 @@ var server = function(redisClient) {
   // middleware
   app.use(bodyParser.json()); // for parsing application/json
   // setup Routes
-  app.get('/', function (req, res) {
-    res.json({'version': '1'});
+  app.get('/*', express.static('dist/'));
+
+  //api root
+  app.get('/api/', function(req, res) {
+      res.json({'version': '1'});
   });
 
   //login and registration
-  app.post('/register', loginRoutes.register);
-  app.post('/login', loginRoutes.login);
+  app.post('/api/register', loginRoutes.register);
+  app.post('/api/login', loginRoutes.login);
   //channels and posts
-  app.get('/c/:channel', channelRoutes.getChannel);
-  app.post('/c/:channel', channelRoutes.postToChannel);
+  app.get('/api/c/:channel', channelRoutes.getChannel);
+  app.post('/api/c/:channel', channelRoutes.postToChannel);
 
   return app;
 };

@@ -1,21 +1,21 @@
 'use strict';
 
 var React = require('react/addons');
-var ReactTransitionGroup = React.addons.TransitionGroup;
+var ChannelsList = require('components/ChannelsList');
+var Channel = require('components/Channel');
 
 // CSS
-require('normalize.css');
+require('purecss/build/pure-min.css');
+require('purecss/build/grids-responsive-min.css');
 require('../styles/main.css');
 
-var imageURL = require('../images/yeoman.png');
 
 var ImgdApp = React.createClass({
   render: function() {
     return (
-      <div className="main">
-        <ReactTransitionGroup transitionName="fade">
-          <img src={imageURL} />
-        </ReactTransitionGroup>
+      <div className="pure-g">
+          <div className="pure-u-1-5"><ChannelsList /></div>
+          <div className="pure-u-1-3"><Channel /></div>
       </div>
     );
   }
