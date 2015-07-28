@@ -6,6 +6,8 @@
  */
 'use strict';
 var webpack = require('webpack');
+var path = require('path');
+var BowerWebpackPlugin = require('bower-webpack-plugin');
 
 module.exports = {
 
@@ -28,6 +30,7 @@ module.exports = {
   },
 
   resolve: {
+    root: [path.join(__dirname, 'bower_components')],
     extensions: ['', '.js', '.jsx'],
     alias: {
       'styles': __dirname + '/src/styles',
@@ -40,7 +43,7 @@ module.exports = {
   module: {
     preLoaders: [{
       test: /\.(js|jsx)$/,
-      exclude: /node_modules/,
+      exclude: [/node_modules/, /bower_components/],
       loader: 'eslint-loader'
     }],
     loaders: [{
@@ -49,7 +52,11 @@ module.exports = {
       loader: 'react-hot!babel-loader'
     }, {
       test: /\.scss/,
-      loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
+      loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded' +
+          'includePaths[]=' +
+            (path.resolve(__dirname, './bower_components')) + '&' +
+          'includePaths[]=' +
+            (path.resolve(__dirname, './node_modules'))
     }, {
       test: /\.css$/,
       loader: 'style-loader!css-loader'
@@ -60,13 +67,27 @@ module.exports = {
       test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       loader: 'url-loader?limit=10000&minetype=application/font-woff'
     }, {
-      test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+      test: /\.(otf|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       loader: 'file-loader'
     }]
   },
 
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.ResolverPlugin(
+           new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('bower.json', ['main'])
+    ),
+    new webpack.ProvidePlugin({
+        $: 'jquery',
+        jQuery: 'jquery',
+        'window.jQuery': 'jquery',
+        uikit: 'uikit'
+    }),
+    new BowerWebpackPlugin({
+      modulesDirectories: ['bower_components'],
+      manifestFiles: 'bower.json',
+      searchResolveModulesDirectories: true
+    })
   ]
 
 };

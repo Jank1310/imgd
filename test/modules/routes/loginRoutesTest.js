@@ -33,7 +33,7 @@ describe('loginRoutes', function() {
         id: 1
       };
       request(app)
-            .post('/register')
+            .post('/api/register')
             .send(sampleUser)
             .end(function(err, res){
               assert.equal(res.status, 201);
@@ -49,7 +49,7 @@ describe('loginRoutes', function() {
         password: 'secretPassword'
       };
       request(app)
-            .post('/register')
+            .post('/api/register')
             .send(registration)
             .end(function(err, res){
               assert.equal(res.status, 400);
@@ -65,7 +65,7 @@ describe('loginRoutes', function() {
         password: '123'
       };
       request(app)
-            .post('/register')
+            .post('/api/register')
             .send(registration)
             .end(function(err, res){
               assert.equal(res.status, 400);
@@ -83,7 +83,7 @@ describe('loginRoutes', function() {
     it('should login with correct credentials and get api key', function(done) {
       this.slow(2000);
       request(app)
-            .post('/login')
+            .post('/api/login')
             .send({email: sampleUser.email, password: sampleUser.password})
             .end(function(err, res){
               assert.equal(res.status, 200);
@@ -98,7 +98,7 @@ describe('loginRoutes', function() {
     it('should not login with wrong email', function(done) {
       this.slow(2000);
       request(app)
-            .post('/login')
+            .post('/api/login')
             .send({email: 'someWrongEmail', password: sampleUser.password})
             .end(function(err, res){
               assert.equal(res.status, 401);
@@ -109,13 +109,12 @@ describe('loginRoutes', function() {
     it('should not login with wrong password', function(done) {
       this.slow(2000);
       request(app)
-            .post('/login')
+            .post('/api/login')
             .send({email: sampleUser.email, password: 'wrongpassword'})
             .end(function(err, res){
               assert.equal(res.status, 401);
               done();
             });
     });
-
   });
 });

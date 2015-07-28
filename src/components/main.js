@@ -9,7 +9,8 @@ var content = document.getElementById('content');
 
 var Routes = (
   <Route handler={ImgdApp}>
-    <Route name="/" handler={ImgdApp}/>
+    <Route name="/" handler={ImgdApp}>
+    </Route>
   </Route>
 );
 

@@ -10,25 +10,25 @@ var ChannelsList = React.createClass({
   render: function () {
     return (
       <div className="channels-list">
-        <form className="pure-form">
-          <input type="text" className="pure-input-1" placeholder="Search channel" />
+        <form className="uk-form">
+          <input type="text" placeholder="Search channel" />
         </form>
-          <div className="pure-menu">
-            <span className="pure-menu-heading"><i className="fa fa-fire"></i> Trending</span>
-            <ul className="pure-menu-list">
-              <li className="pure-menu-item"><a href="/c/germany" className="pure-menu-link">/germany</a></li>
-              <li className="pure-menu-item"><a href="/c/germany" className="pure-menu-link">/nsfw</a></li>
-              <li className="pure-menu-item"><a href="/c/germany" className="pure-menu-link">/cats</a></li>
-              <li className="pure-menu-item"><a href="/c/germany" className="pure-menu-link">/funny</a></li>
-              <li className="pure-menu-item"><a href="/c/germany" className="pure-menu-link">/eurovision</a></li>
-              <li className="pure-menu-heading"><i className="fa fa-clock-o"></i> New</li>
-              <li className="pure-menu-item"><a href="/c/germany" className="pure-menu-link">/world</a></li>
-              <li className="pure-menu-item"><a href="/c/germany" className="pure-menu-link">/party</a></li>
-              <li className="pure-menu-item"><a href="/c/germany" className="pure-menu-link">/e3</a></li>
-              <li className="pure-menu-item"><a href="/c/germany" className="pure-menu-link">/holiday</a></li>
-              <li className="pure-menu-item"><a href="/c/germany" className="pure-menu-link">/somereallycoolchannel</a></li>
-            </ul>
-        </div>
+        <ul className="uk-list">
+          <li><i className="fa fa-fire"></i> Popular</li>
+          <li><a href="/c/germany">/germany</a></li>
+          <li><a href="/c/germany">/nsfw</a></li>
+          <li><a href="/c/germany">/cats</a></li>
+          <li><a href="/c/germany">/funny</a></li>
+          <li><a href="/c/germany">/eurovision</a></li>
+        </ul>
+        <ul className="uk-list">
+          <li><i className="fa fa-clock-o"></i> Recent</li>
+          <li><a href="/c/germany">/world</a></li>
+          <li><a href="/c/germany">/party</a></li>
+          <li><a href="/c/germany">/e3</a></li>
+          <li><a href="/c/germany">/holiday</a></li>
+          <li><a href="/c/germany">/somereallycoolchannel</a></li>
+        </ul>
       </div>
     );
   }

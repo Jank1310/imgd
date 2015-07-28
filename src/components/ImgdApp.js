@@ -5,17 +5,24 @@ var ChannelsList = require('components/ChannelsList');
 var Channel = require('components/Channel');
 
 // CSS
-require('purecss/build/pure-min.css');
-require('purecss/build/grids-responsive-min.css');
-require('../styles/main.css');
+require('jquery');
+require('uikit');
+require('uikit/js/components/sticky.js');
+require('../styles/ImgdApp.scss');
 
 
 var ImgdApp = React.createClass({
   render: function() {
     return (
-      <div className="pure-g">
-          <div className="pure-u-1-5"><ChannelsList /></div>
-          <div className="pure-u-1-3"><Channel /></div>
+      <div className="app">
+        <div className="uk-grid">
+          <div className="uk-width-2-3 uk-container-center">
+            <div className="uk-grid">
+              <div className="uk-width-2-6" data-uk-sticky><ChannelsList /></div>
+              <div className="uk-width-3-6"><Channel /></div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

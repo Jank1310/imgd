@@ -19,11 +19,10 @@ var server = function(redisClient) {
   app.get('/api/', function(req, res) {
       res.json({'version': '1'});
   });
-
-  //login and registration
+  //api login and registration
   app.post('/api/register', loginRoutes.register);
   app.post('/api/login', loginRoutes.login);
-  //channels and posts
+  //api channels and posts
   app.get('/api/c/:channel', channelRoutes.getChannel);
   app.post('/api/c/:channel', channelRoutes.postToChannel);
 

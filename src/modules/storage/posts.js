@@ -17,9 +17,11 @@ var posts = function(redisClient) {
           'message': post.message,
           'created': ts
         };
-        redisClient.hmset(redisConfig.POST_HASH_PREFIX + postId, postContent, function(_err) {
+        var postKey = redisConfig.POSTS_PREFIX + postId;
+        redisClient.hmset(postKey, postContent, function(_err) {
           if(_err) { return cb(_err); }
-          redisClient.zadd(redisConfig.CHANNEL_POST_IDS_PREFIX_SSET + channel, postId, postId, function(_err2) {
+          var channelPostsKey = redisConfig.CHANNEL_PREFIX + channel + redisConfig.CHANNEL_POSTS_POSTFIX;
+          redisClient.zadd(channelPostsKey, postId, postId, function(_err2) {
             if(_err2) { return cb(_err2); }
             return cb(null, postContent);
           });
@@ -36,15 +38,15 @@ var posts = function(redisClient) {
       } else {
         postCount = postCount < 100 ? postCount : 100; //limit post count to 100
       }
-      var postsSSet = redisConfig.CHANNEL_POST_IDS_PREFIX_SSET + channel;
-      redisClient.zrevrangebyscore(postsSSet, '(' + before, '-inf', 'LIMIT', '0', postCount, function(err, postIds) {
+      var channelPostsKey = redisConfig.CHANNEL_PREFIX + channel + redisConfig.CHANNEL_POSTS_POSTFIX;
+      redisClient.zrevrangebyscore(channelPostsKey, '(' + before, '-inf', 'LIMIT', '0', postCount, function(err, postIds) {
         if(err) {
           return cb(err);
         }
         //get posts for ids
         var postsResult = [];
         async.eachSeries(postIds, function(postId, _cb) {
-          var postHash = redisConfig.POST_HASH_PREFIX + postId;
+          var postHash = redisConfig.POSTS_PREFIX + postId;
           redisClient.hgetall(postHash, function(_err, post) {
             if(_err) { return _cb(_err); }
             postsResult.push(post);

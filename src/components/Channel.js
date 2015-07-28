@@ -9,8 +9,8 @@ var Channel = React.createClass({
 
   render: function () {
     return (
-        <div className="channel pure-g">
-          <div class="pure-u-3-5">
+        <div className="channel">
+          <div className="">
             <Post />
             <Post />
           </div>

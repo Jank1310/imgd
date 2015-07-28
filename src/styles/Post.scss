@@ -15,29 +15,20 @@
   }
 
   .info {
-    padding: 0.5rem;
-
-    .user {
-      font-size: .83rem;
-      font-weight: bold;
-    }
+    padding: .5rem;
 
     .time {
-      color: $secondary-text-color;
-      font-size: .83rem;
       text-align: right;
     }
   }
 
   .description {
-    color: $primary-text-color;
-    font-size: .95rem;
     padding: .05em .5em;
   }
 
   .like {
-    padding: .5em;
     color: $secondary-text-color;
+    padding: .5em;
 
     a {
       color: inherit;
@@ -46,7 +37,7 @@
 
     .fa-heart-o {
       font-size: 1.5rem;
-            transition: color .2s ease;
+      transition: color .2s ease;
     }
 
     .fa-heart-o:hover {

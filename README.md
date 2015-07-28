@@ -26,3 +26,19 @@ API keys are always stored as sha1 hash!
 
 * API keys are saved in a **hash**. Key: apiKey, value:userId.
 * API key details are saved in a **hash**: created, apiKey, userId
+
+
+### Names:
+
+* `users_next_id` - int for user ids
+* `user:USER_ID` - user details (hash)
+* `user.emails` - users by mail (hash) with field_key = EMAIL, field_value = USER_ID
+
+* `apiKeys` - hash with key: HASHED_API_KEY, value: userId
+* `apiKey:HASHED_API_KEY` - hash with api key details: created, userId
+
+* `channels` - sorted set with all channels. (The algorithm for the score is not clear yet)
+* `channel:CHANNEL_ID.posts` - sorted set with value = POST_ID and score = post_id
+
+* `post:POST_ID` - hash with post details
+* `global.posts` - sort set with all posts, score is the "hottnes"

@@ -19,7 +19,7 @@ describe('channelRoutes', function() {
 
   it('should return no posts when channel does not exist', function(done) {
     request(app)
-          .get('/c/someChannel')
+          .get('/api/c/someChannel')
           .expect('Content-Type', /json/)
           .expect({'posts': []})
           .expect(200, done);
@@ -28,13 +28,13 @@ describe('channelRoutes', function() {
   it('should post and return posts', function(done) {
     var postContent = {'message': 'some message 2'};
     request(app)
-          .post('/c/someChannel3')
+          .post('/api/c/someChannel3')
           .send(postContent)
           .end(function(err, res){
             assert.equal(res.status, 201);
             assert.deepEqual(res.body.message, postContent.message);
             request(app)
-                  .get('/c/someChannel3')
+                  .get('/api/c/someChannel3')
                   .expect('Content-Type', /json/)
                   .expect(function(resp) {
                     assert.equal(resp.body.posts.length, 1);
