@@ -89,5 +89,4 @@ module.exports = {
       searchResolveModulesDirectories: true
     })
   ]
-
 };
