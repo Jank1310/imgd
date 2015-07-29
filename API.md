@@ -45,34 +45,16 @@ Returns the version of the api.
             }
 
 + Response 400
-Response if email address is not correctly formed
+Response if email address is not correctly formed, password is to short N < 4
+or username is to short or to long 3 <= N <= 15
 
   + Body
 
-    {
-      "error":"email malformed",
-      "errorCode": 1
-    }
+            {
+              "error":ERROR_DESCRIPTION,
+              "errorCode": 1/2/3
+            }
 
-+ Response 400
-Response if password is to short N < 4
-
-  + Body
-
-    {
-      "error":"Password malformed. Minimum 4 digits. Maximum 50 digits.",
-      "errorCode": 2
-    }
-
-+ Response 400
-Response if the username is to short or to long 3 <= N <= 15
-
-  + Body
-
-    {
-      "error":"Username malformed. Minimum length: 3. Maximum length: 50.",
-      "errorCode": 3
-    }
 
 + Response 409
 Response if given email is already registered.
@@ -109,6 +91,26 @@ Response if the credentials are invalid
 
 
 # Group Channels and posts
+
+## Recent channels [/recent/channels{?count}]
+
++ Parameters
+    + count (integer, optional) - number of channels to return. Max value = 100
+
+### GET
+Returns the recent channels sort by creation time
+
++ Response 200 (application/json)
+
+  + Body
+
+          {
+            'recentChannels': [
+              "channel1",
+              "channel2",
+              "channel3"
+            ]
+          }
 
 ## Channels [/c/{channel}{?before}{?count}]
 

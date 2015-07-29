@@ -59,6 +59,7 @@
     "require-dot-file": "^0.4.0",
     "semantic-ui": "^2.0.7",
     "sha1": "^1.1.1",
+    "superagent": "^1.2.0",
     "uikit": "^2.21.0",
     "underscore": "^1.8.3",
     "validate.io-safe-integer": "^1.0.1",

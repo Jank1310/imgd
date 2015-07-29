@@ -5,6 +5,7 @@ var redis = require('redis'),
 var server = require('../../../src/modules/server');
 var request = require('supertest');
 var assert = require('assert');
+var async = require('async');
 
 describe('channelRoutes', function() {
   var app;
@@ -14,6 +15,18 @@ describe('channelRoutes', function() {
         app = server.newServer(redisClient);
         done();
       });
+    });
+  });
+
+  it('should return recent channels', function(done) {
+    var channelList = ['channel1', 'channel2', 'channel3', 'channel4'];
+    async.eachSeries(channelList, function(channel, cb) {
+      request(app).post('/api/c/' + channel).send({'message': 'new message'}).end(cb);
+    }, function() {
+        request(app)
+        .get('/api/recent/channels?limit=2')
+        .expect({recentChannels: ['channel4', 'channel3']})
+        .expect(200, done);
     });
   });
 

@@ -7,8 +7,10 @@ module.exports.EMAIL_TO_USER_ID_HASH = 'mail_to_user_id'; //e.g. jondoe@internet
 //apiKeys
 module.exports.API_KEYS_TO_USER_ID_HASH = 'apiKeys';
 module.exports.API_KEYS_HASH_PREFIX = 'apiKey:'; //apiKey:sdfajoiawroeiaajoigjg
+
 //channels
 module.exports.CHANNELS_SET = 'channels';
+module.exports.CHANNELS_SORT_BY_CREATION = 'channels.sorted_time';
 module.exports.CHANNEL_PREFIX = 'postids:'; //channel:channel_name
 module.exports.CHANNEL_POSTS_POSTFIX = ':posts';
 

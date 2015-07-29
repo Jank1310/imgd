@@ -22,6 +22,9 @@ var server = function(redisClient) {
   //api login and registration
   app.post('/api/register', loginRoutes.register);
   app.post('/api/login', loginRoutes.login);
+
+  //api channel list
+  app.get('/api/recent/channels', channelRoutes.getRecentChannels);
   //api channels and posts
   app.get('/api/c/:channel', channelRoutes.getChannel);
   app.post('/api/c/:channel', channelRoutes.postToChannel);
