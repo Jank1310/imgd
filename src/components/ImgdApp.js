@@ -18,7 +18,7 @@ var ImgdApp = React.createClass({
         <div className="uk-grid">
           <div className="uk-width-2-3 uk-container-center">
             <div className="uk-grid">
-              <div className="uk-width-2-6" data-uk-sticky><ChannelsList /></div>
+              <div data-uk-sticky><ChannelsList /></div>
               <div className="uk-width-3-6"><Channel /></div>
             </div>
           </div>

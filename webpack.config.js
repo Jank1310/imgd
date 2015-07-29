@@ -74,9 +74,6 @@ module.exports = {
 
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.ResolverPlugin(
-           new webpack.ResolverPlugin.DirectoryDescriptionFilePlugin('bower.json', ['main'])
-    ),
     new webpack.ProvidePlugin({
         $: 'jquery',
         jQuery: 'jquery',
@@ -84,9 +81,7 @@ module.exports = {
         uikit: 'uikit'
     }),
     new BowerWebpackPlugin({
-      modulesDirectories: ['bower_components'],
-      manifestFiles: 'bower.json',
-      searchResolveModulesDirectories: true
+      searchResolveModulesDirectories: false
     })
   ]
 };
