@@ -2,7 +2,7 @@
 
 var Reflux = require('reflux');
 
-var PostsActionCreators  =  Reflux.createActions([
+var PostsActionCreators = Reflux.createActions([
   'getPosts'
 ]);
 

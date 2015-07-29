@@ -1,34 +1,41 @@
 'use strict';
 
 var React = require('react/addons');
+var channelsStore = require('stores/ChannelsStore');
+var Reflux = require('reflux');
 
-require('font-awesome/css/font-awesome.css');
 require('styles/ChannelsList.scss');
 
 var ChannelsList = React.createClass({
+  mixins: [Reflux.connect(channelsStore, 'channels')],
 
   render: function () {
     return (
-      <div className="channels-list">
-        <form className="uk-form">
-          <input type="text" placeholder="Search channel" />
-        </form>
-        <ul className="uk-list">
-          <li><i className="fa fa-fire"></i> Popular</li>
-          <li><a href="/c/germany">/germany</a></li>
-          <li><a href="/c/germany">/nsfw</a></li>
-          <li><a href="/c/germany">/cats</a></li>
-          <li><a href="/c/germany">/funny</a></li>
-          <li><a href="/c/germany">/eurovision</a></li>
-        </ul>
-        <ul className="uk-list">
-          <li><i className="fa fa-clock-o"></i> Recent</li>
-          <li><a href="/c/germany">/world</a></li>
-          <li><a href="/c/germany">/party</a></li>
-          <li><a href="/c/germany">/e3</a></li>
-          <li><a href="/c/germany">/holiday</a></li>
-          <li><a href="/c/germany">/somereallycoolchannel</a></li>
-        </ul>
+      <div className="ui segment channels-list">
+        <div className="ui transparent icon input">
+          <input type="text" placeholder="Search channel..." />
+        </div>
+        <div className="ui list">
+          <div className="item">
+            <div className="content">
+              <div className="header">Popular</div>
+            </div>
+          </div>
+          {this.state.channels.popular.map(function(channel) {
+            var url = '/c/' + channel;
+            return <a className="item" href={url} key={channel}>/{channel}</a>;
+          })}
+        </div>
+        <div className="ui list">
+        <div className="item">
+          <div className="content">
+            <div className="header">Recent</div>
+          </div>
+        </div>
+          {this.state.channels.recent.map(function(channel) {
+            return <a className="item" href="/c/{channel}" key={channel}>/{channel}</a>;
+          })}
+        </div>
       </div>
     );
   }

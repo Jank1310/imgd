@@ -1,4 +1,7 @@
 // styles
+@import 'palette';
+
 .app {
+  background-color: $app-background-color;
   padding-top: 2em;
 }

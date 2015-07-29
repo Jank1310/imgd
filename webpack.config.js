@@ -6,8 +6,6 @@
  */
 'use strict';
 var webpack = require('webpack');
-var path = require('path');
-var BowerWebpackPlugin = require('bower-webpack-plugin');
 
 module.exports = {
 
@@ -30,20 +28,20 @@ module.exports = {
   },
 
   resolve: {
-    root: [path.join(__dirname, 'bower_components')],
     extensions: ['', '.js', '.jsx'],
     alias: {
       'styles': __dirname + '/src/styles',
       'mixins': __dirname + '/src/mixins',
       'components': __dirname + '/src/components/',
       'stores': __dirname + '/src/stores/',
-      'actions': __dirname + '/src/actions/'
+      'actions': __dirname + '/src/actions/',
+      'semantic': __dirname + '/semantic/dist'
     }
   },
   module: {
     preLoaders: [{
       test: /\.(js|jsx)$/,
-      exclude: [/node_modules/, /bower_components/],
+      exclude: [/node_modules/, /bower_components/, /semantic/],
       loader: 'eslint-loader'
     }],
     loaders: [{
@@ -52,11 +50,7 @@ module.exports = {
       loader: 'react-hot!babel-loader'
     }, {
       test: /\.scss/,
-      loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded' +
-          'includePaths[]=' +
-            (path.resolve(__dirname, './bower_components')) + '&' +
-          'includePaths[]=' +
-            (path.resolve(__dirname, './node_modules'))
+      loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
     }, {
       test: /\.css$/,
       loader: 'style-loader!css-loader'
@@ -79,9 +73,6 @@ module.exports = {
         jQuery: 'jquery',
         'window.jQuery': 'jquery',
         uikit: 'uikit'
-    }),
-    new BowerWebpackPlugin({
-      searchResolveModulesDirectories: false
     })
   ]
 };

@@ -3,7 +3,7 @@
 var React = require('react/addons');
 var Post = require('components/Post');
 var Reflux = require('reflux');
-var postsStore = require('stores/ChannelsStore');
+var postsStore = require('stores/PostsStore');
 
 require('styles/Channel.scss');
 
@@ -12,7 +12,7 @@ var Channel = React.createClass({
 
   render: function () {
     return (
-        <div>
+        <div className="channel">
           {this.state.postsStatus.map(function(post) {
             return <Post key={post.id} data={post} />;
           })}

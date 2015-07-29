@@ -1,26 +1,35 @@
 'use strict';
 
+// Vendor
+require('jquery');
+require('semantic/semantic.js');
+require('semantic/semantic.css');
+
+
 var React = require('react/addons');
 var ChannelsList = require('components/ChannelsList');
 var Channel = require('components/Channel');
 
-// CSS
-require('jquery');
-require('uikit');
-require('uikit/js/components/sticky.js');
+// App
 require('../styles/ImgdApp.scss');
 
 
 var ImgdApp = React.createClass({
+  componentDidMount: function() {
+    $('.ui.sticky').sticky();
+  },
+
   render: function() {
     return (
       <div className="app">
-        <div className="uk-grid">
-          <div className="uk-width-2-3 uk-container-center">
-            <div className="uk-grid">
-              <div data-uk-sticky><ChannelsList /></div>
-              <div className="uk-width-3-6"><Channel /></div>
+        <div className="ui centered grid">
+          <div className="row">
+            <div className="two wide column">
+              <div className="ui sticky">
+                <ChannelsList />
+              </div>
             </div>
+            <div id="channel" className="five wide column"><Channel /></div>
           </div>
         </div>
       </div>
