@@ -14,7 +14,11 @@ var server = function(redisClient) {
   app.use(bodyParser.json()); // for parsing application/json
   // setup Routes
   app.get('/*', express.static('dist/'));
-
+  app.get('/c/*', function(req, res) {
+    console.log('Request for channel');
+    res.type('html');
+    res.sendFile('index.html', {root: './dist/'});
+  });
   //api root
   app.get('/api/', function(req, res) {
       res.json({'version': '1'});

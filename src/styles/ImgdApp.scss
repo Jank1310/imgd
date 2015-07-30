@@ -1,7 +1,12 @@
 // styles
 @import 'palette';
+@import url(http://fonts.googleapis.com/css?family=Pacifico);
 
 .app {
   background-color: $app-background-color;
   padding-top: 2em;
+}
+
+.logo {
+  font-family: 'Pacifico';
 }

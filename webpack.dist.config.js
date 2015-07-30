@@ -8,7 +8,6 @@
 
 var webpack = require('webpack');
 var path = require('path');
-var BowerWebpackPlugin = require('bower-webpack-plugin');
 
 module.exports = {
 
@@ -38,11 +37,6 @@ module.exports = {
         jQuery: 'jquery',
         'window.jQuery': 'jquery',
         uikit: 'uikit'
-    }),
-    new BowerWebpackPlugin({
-      modulesDirectories: ['bower_components'],
-      manifestFiles: 'bower.json',
-      searchResolveModulesDirectories: true
     })
   ],
 
@@ -54,14 +48,15 @@ module.exports = {
       'mixins': __dirname + '/src/mixins',
       'components': __dirname + '/src/components/',
       'stores': __dirname + '/src/stores/',
-      'actions': __dirname + '/src/actions/'
+      'actions': __dirname + '/src/actions/',
+      'semantic': __dirname + '/semantic/dist'
     }
   },
 
   module: {
     preLoaders: [{
       test: /\.(js|jsx)$/,
-      exclude: /node_modules/,
+      exclude: [/node_modules/, /bower_components/, /semantic/],
       loader: 'eslint-loader'
     }],
     loaders: [{

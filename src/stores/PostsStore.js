@@ -10,6 +10,7 @@ var PostsStore = Reflux.createStore({
     {
       id: 1,
       user: 'Jank1310',
+      channel: 'funny',
       created: 123434545,
       image: 'http://img-9gag-fun.9cache.com/photo/aYwgMRv_700b.jpg',
       message: 'This dramatic imajjljkge shows the Hubble Space Telescope’s view of a dwarf galaxy known as NGC 1140, whic',
@@ -18,6 +19,7 @@ var PostsStore = Reflux.createStore({
     {
       id: 2,
       user: 'Jank1310',
+      channel: 'nurnberg',
       created: 123438945,
       image: 'http://img-9gag-fun.9cache.com/photo/aYwgMRv_700b.jpg',
       message: 'Register your component to listen for changes in your data stores',
