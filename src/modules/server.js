@@ -19,28 +19,27 @@ var server = function(redisClient) {
   var isProduction = process.env.NODE_ENV === 'production';
 
   if(!isProduction) {
-    console.log("dev mode enabled");
     var serveIndex = function(req, res) {
       agent.get('localhost:3000/index.html').end(function(err, _res) {
         if(_res.body) {
           res.type('html');
           res.send(_res.text);
         } else {
-          res.send("Error");
+          res.send('Error');
         }
       });
-    }
+    };
 
     app.all('/', serveIndex);
     app.all('/c/:channel', serveIndex);
+    app.all('/newPost', serveIndex);
     //serve assets from the webpack server
     app.all('/assets/*', function (req, res) {
-      console.log("Request to assets in dev...proxying");
       proxy.web(req, res, {
           target: 'http://localhost:3000'
       });
     });
-    proxy.on('error', function(e) {
+    proxy.on('error', function() {
       console.log('Could not connect to proxy, please try again...');
     });
   } else {
