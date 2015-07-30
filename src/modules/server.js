@@ -10,19 +10,51 @@ var server = function(redisClient) {
   var apiKeys = require('./storage/apiKeys')(redisClient);
   var channelRoutes = require('./routes/channelRoutes.js')(channels, posts);
   var loginRoutes = require('./routes/loginRoutes.js')(users, apiKeys);
+  var proxy = require('http-proxy').createProxyServer();
+  var agent = require('superagent');
+
   // middleware
   app.use(bodyParser.json()); // for parsing application/json
-  // setup Routes
-  app.get('/*', express.static('dist/'));
-  app.get('/c/*', function(req, res) {
-    console.log('Request for channel');
-    res.type('html');
-    res.sendFile('index.html', {root: './dist/'});
-  });
+
+  var isProduction = process.env.NODE_ENV === 'production';
+
+  if(!isProduction) {
+    console.log("dev mode enabled");
+    var serveIndex = function(req, res) {
+      agent.get('localhost:3000/index.html').end(function(err, _res) {
+        if(_res.body) {
+          res.type('html');
+          res.send(_res.text);
+        } else {
+          res.send("Error");
+        }
+      });
+    }
+
+    app.all('/', serveIndex);
+    app.all('/c/:channel', serveIndex);
+    //serve assets from the webpack server
+    app.all('/assets/*', function (req, res) {
+      console.log("Request to assets in dev...proxying");
+      proxy.web(req, res, {
+          target: 'http://localhost:3000'
+      });
+    });
+    proxy.on('error', function(e) {
+      console.log('Could not connect to proxy, please try again...');
+    });
+  } else {
+    app.get(express.static('dist/'));
+    app.get('/c/:channel', function(req, res) {
+      res.sendFile('index.html', {root: './dist'});
+    });
+  }
+
   //api root
   app.get('/api/', function(req, res) {
       res.json({'version': '1'});
   });
+
   //api login and registration
   app.post('/api/register', loginRoutes.register);
   app.post('/api/login', loginRoutes.login);

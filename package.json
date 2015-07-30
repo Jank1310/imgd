@@ -82,6 +82,7 @@
     "grunt-nodemon": "^0.4.0",
     "grunt-open": "~0.2.3",
     "grunt-webpack": "~1.0.8",
+    "http-proxy": "^1.11.1",
     "jasmine-core": "^2.3.4",
     "karma": "~0.12.21",
     "karma-jasmine": "^0.3.5",

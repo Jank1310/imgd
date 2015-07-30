@@ -2,8 +2,11 @@
 @import 'palette';
 @import url(http://fonts.googleapis.com/css?family=Pacifico);
 
-.app {
+body {
   background-color: $app-background-color;
+}
+
+.app {
   padding-top: 2em;
 }
 

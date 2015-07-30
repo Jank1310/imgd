@@ -15,9 +15,10 @@ var Routes = (
   <Route handler={ImgdApp}>
       <DefaultRoute handler={Channel}/>
       <Route name="newPost" handler={NewPost}/>
+      <Route name="/c/:channel" handler={Channel}/>
   </Route>
 );
 
-Router.run(Routes, function (Handler) {
+Router.run(Routes, Router.HistoryLocation, function (Handler) {
   React.render(<Handler/>, content);
 });

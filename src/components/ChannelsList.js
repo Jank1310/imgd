@@ -23,7 +23,8 @@ var ChannelsList = React.createClass({
           </div>
           {this.state.channels.popular.map(function(channel) {
             var url = '/c/' + channel;
-            return <a className="item" href={url} key={channel}>/{channel}</a>;
+            var channelName = '/' + channel;
+            return <a className="item" href={url} key={channel}>{channelName}</a>;
           })}
         </div>
         <div className="ui list">

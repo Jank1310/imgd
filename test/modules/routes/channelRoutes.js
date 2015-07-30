@@ -19,6 +19,7 @@ describe('channelRoutes', function() {
   });
 
   it('should return recent channels', function(done) {
+    this.slow(500);
     var channelList = ['channel1', 'channel2', 'channel3', 'channel4'];
     async.eachSeries(channelList, function(channel, cb) {
       request(app).post('/api/c/' + channel).send({'message': 'new message'}).end(cb);

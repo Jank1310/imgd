@@ -4,6 +4,8 @@ require('styles/Post.scss');
 
 var React = require('react/addons');
 var moment = require('moment');
+var Router = require('react-router');
+var Link = Router.Link;
 
 
 var Post = React.createClass({
@@ -17,7 +19,7 @@ var Post = React.createClass({
               <img className="ui avatar image" src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfa1/v/t1.0-1/c33.33.411.411/s40x40/408350_473766092643340_1600889771_n.jpg?oh=e684b43d60de443cc8437593ae6bb601&oe=5642D99A&__gda__=1444094634_cefee95dc312085bbd733afd58a5e5fc" />
               {this.props.data.user}
             <div className="right floated">
-              <div><strong><a href={channelUrl}>{channelText}</a></strong></div>
+              <div><strong><Link to={channelUrl}>{channelText}</Link></strong></div>
               <span className="meta">{timeStr}</span></div>
           </div>
           <a className="image" href={this.props.data.image} target='_new'>

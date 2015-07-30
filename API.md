@@ -104,13 +104,13 @@ Returns the recent channels sort by creation time
 
   + Body
 
-          {
-            'recentChannels': [
-              "channel1",
-              "channel2",
-              "channel3"
-            ]
-          }
+            {
+              'recentChannels': [
+                "channel1",
+                "channel2",
+                "channel3"
+              ]
+            }
 
 ## Channels [/c/{channel}{?before}{?count}]
 

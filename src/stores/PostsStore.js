@@ -2,11 +2,13 @@
 
 var Reflux = require('reflux');
 var Actions = require('actions/PostsActionCreators');
+var agent = require('superagent');
 
 var PostsStore = Reflux.createStore({
   listenables: Actions,
 
   posts: [
+    /*
     {
       id: 1,
       user: 'Jank1310',
@@ -25,15 +27,33 @@ var PostsStore = Reflux.createStore({
       message: 'Register your component to listen for changes in your data stores',
       likes: 3423
     }
+    */
   ],
 
   getInitialState: function() {
-      return this.posts;
+      return {loading: false, posts: this.posts};
    },
 
-  onGetPosts: function() {
-    console.log('get posts');
+  onGetPostsOfChannel: function(channel) {
+    console.log('get posts:' + channel);
+    this.posts = [];
+    this.trigger({loading: true, posts: this.posts});
+    agent.get('/api/c/' + channel, function(err, res) {
+      console.log(res);
+      if(res.ok) {
+        Actions.getPostsOfChannel.completed(res.body);
+      } else {
+        Actions.getPostsOfChannel.failed(res.error);
+      }
+    });
+  },
+
+  onGetPostsOfChannelCompleted: function(result) {
+    console.log('Received result: ' + result);
+    this.posts = result.posts;
+    this.trigger({loading: false, posts: this.posts});
   }
+
 });
 
 module.exports = PostsStore;
