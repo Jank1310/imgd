@@ -26,7 +26,7 @@ module.exports = function (grunt) {
         port: 3000,
         webpack: webpackDevConfig,
         publicPath: '/assets/',
-        contentBase: './<%= pkg.src %>/',
+        contentBase: './<%= pkg.src %>/'
       },
 
       start: {
@@ -39,7 +39,9 @@ module.exports = function (grunt) {
          script: 'main.js',
          options: {
            watch: ['main.js', 'src/modules/'],
-           env: {'DEBUG': 'express:*'}
+           env: {
+             //'DEBUG': 'express:*'
+          }
          }
       }
     },

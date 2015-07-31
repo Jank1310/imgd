@@ -28,12 +28,13 @@ var ChannelsStore = Reflux.createStore({
 
    onGetChannelsCompleted: function(res) {
     console.log(res);
+    this.recentChannels = res.recentChannels;
+    this.trigger({popular: this.popularChannels, recent: this.recentChannels});
    },
 
    onGetChannelsFailed: function(error) {
      console.log(error);
    }
-
 });
 
 module.exports = ChannelsStore;

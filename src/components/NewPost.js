@@ -1,14 +1,68 @@
 'use strict';
 
 var React = require('react/addons');
+var Reflux = require('reflux');
 
-//var Actions = require('actions/xxx')
+var Actions = require('actions/NewPostActionCreators');
+var Router = require('react-router');
+var NewPostsStore = require('stores/NewPostStore');
 
 require('styles/NewPost.scss');
 
-var AddPost = React.createClass({
+var NewPost = React.createClass({
+  mixins: [
+    Router.Navigation,
+    Reflux.connect(NewPostsStore, 'newPostStore')
+  ],
+
+  componentWillUpdate: function(nextProps, nextState) {
+    if(nextState.newPostStore.posting === false
+      && nextState.newPostStore.postSuccess === true)
+    {
+      this.goBackToChannel(true);
+    }
+  },
+
+  goBackToChannel: function(posted) {
+    if(posted) { //go to channel in which we posted
+      var channel = React.findDOMNode(this.refs.channel).value;
+      this.transitionTo('/c/' + channel);
+    } else {
+      if(this.props.query.channel) {
+        this.transitionTo('/c/' + this.props.query.channel);
+      } else {
+        this.transitionTo('/');
+      }
+    }
+  },
+
+  handlePost: function() {
+    var message = React.findDOMNode(this.refs.message).value;
+    var channel = React.findDOMNode(this.refs.channel).value;
+    Actions.postToChannel(channel, message);
+  },
+
+  handleCancel: function() {
+    this.goBackToChannel();
+  },
+
+  handleChannelChange: function() {
+  },
 
   render: function () {
+    var postButton = (
+      <button onClick={this.handlePost} className="ui primary button">
+        Post
+      </button>
+    );
+    if(this.state.newPostStore.posting) {
+      postButton = (
+        <button onClick={this.handlePost} className="ui primary loading button">
+          Post
+        </button>
+      );
+    }
+
     return (
       <div className="ui card">
         <div className="content">
@@ -16,13 +70,18 @@ var AddPost = React.createClass({
           <div className="ui form">
             <div className="field">
               <label>channel</label>
-              <input type="text" value={this.props.query.channel}/>
+              <input ref="channel" onChange={this.handleChannelChange} type="text" value={this.props.query.channel}/>
             </div>
-
             <div className="field">
                <label>Message</label>
-               <textarea rows="2" hint="Your message"></textarea>
+               <textarea ref="message" rows="2" hint="Your message" />
              </div>
+             <div className="right aligned">
+               <button onClick={this.handleCancel} className="ui button">
+                 Cancel
+               </button>
+              {postButton}
+            </div>
          </div>
        </div>
       </div>
@@ -30,4 +89,4 @@ var AddPost = React.createClass({
   }
 });
 
-module.exports = AddPost;
+module.exports = NewPost;

@@ -3,17 +3,19 @@
 var React = require('react/addons');
 var Reflux = require('reflux');
 var Router = require('react-router');
-var Link = Router.Link;
 
 var Post = require('components/Post');
-var postsStore = require('stores/PostsStore');
+var PostsStore = require('stores/PostsStore');
 var PostsActions = require('actions/PostsActionCreators');
 
 require('styles/Channel.scss');
 var paragraphImage = require('../images/short-paragraph.png');
 
 var Channel = React.createClass({
-  mixins: [Reflux.connect(postsStore, 'postsStatus')],
+  mixins: [
+    Reflux.connect(PostsStore, 'postStore'),
+    Router.Navigation
+  ],
 
   componentWillMount: function() {
     this.loadPosts(this.props.params.channel);
@@ -23,6 +25,10 @@ var Channel = React.createClass({
     if(nextProps.params.channel !== this.props.params.channel) {
       this.loadPosts(nextProps.params.channel);
     }
+  },
+
+  handleNewPost: function() {
+    this.transitionTo('newPost', null, {channel: this.props.params.channel});
   },
 
   loadPosts: function(channel) {
@@ -36,7 +42,7 @@ var Channel = React.createClass({
     }
 
     var channelContent;
-    if(this.state.postsStatus.loading) {
+    if(this.state.postStore.loading) {
       channelContent = (
           <div className="ui segment">
             <div className="ui active inverted dimmer">
@@ -46,10 +52,10 @@ var Channel = React.createClass({
           </div>
       );
     } else {
-      if(this.state.postsStatus.posts.length > 0) {
+      if(this.state.postStore.posts.length > 0) {
         channelContent = (
           <div>
-              {this.state.postsStatus.posts.map(function(post) {
+              {this.state.postStore.posts.map(function(post) {
                 return <Post key={post.id} data={post} />;
               })}
           </div>
@@ -70,13 +76,12 @@ var Channel = React.createClass({
     return (
         <div className="channel">
           <h2>{channelName}</h2>
-          <Link to="newPost" query={{channel: this.props.params.channel}}>
-              <div className="fluid ui blue button">
-                <i className="add icon"></i>
-                Post image
-             </div>
-          </Link>
-          {channelContent}
+          <div onClick={this.handleNewPost} className="fluid ui blue button">
+            <i className="add icon"></i>
+            Post image
+         </div>
+         <div className="ui divider"></div>
+         {channelContent}
         </div>
       );
   }

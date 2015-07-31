@@ -3,6 +3,7 @@
 var React = require('react/addons');
 var channelsStore = require('stores/ChannelsStore');
 var Reflux = require('reflux');
+var Link = require('react-router').Link;
 
 require('styles/ChannelsList.scss');
 
@@ -18,23 +19,24 @@ var ChannelsList = React.createClass({
         <div className="ui list">
           <div className="item">
             <div className="content">
-              <div className="header">Popular</div>
+              <div className="header"><i className="fire icon"></i> Popular</div>
             </div>
           </div>
           {this.state.channels.popular.map(function(channel) {
             var url = '/c/' + channel;
             var channelName = '/' + channel;
-            return <a className="item" href={url} key={channel}>{channelName}</a>;
+            return <Link className="item" to={url} key={channel}>{channelName}</Link>;
           })}
         </div>
         <div className="ui list">
-        <div className="item">
-          <div className="content">
-            <div className="header">Recent</div>
+          <div className="item">
+            <div className="content">
+              <div className="header"><i className="wait icon"></i> Recent</div>
+            </div>
           </div>
-        </div>
           {this.state.channels.recent.map(function(channel) {
-            return <a className="item" href="/c/{channel}" key={channel}>/{channel}</a>;
+            var url = '/c/' + channel;
+            return <Link className="item" to={url} key={channel}>{channel}</Link>;
           })}
         </div>
       </div>

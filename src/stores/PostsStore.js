@@ -7,39 +7,21 @@ var agent = require('superagent');
 var PostsStore = Reflux.createStore({
   listenables: Actions,
 
-  posts: [
-    /*
-    {
-      id: 1,
-      user: 'Jank1310',
-      channel: 'funny',
-      created: 123434545,
-      image: 'http://img-9gag-fun.9cache.com/photo/aYwgMRv_700b.jpg',
-      message: 'This dramatic imajjljkge shows the Hubble Space Telescope’s view of a dwarf galaxy known as NGC 1140, whic',
-      likes: 1243
-    },
-    {
-      id: 2,
-      user: 'Jank1310',
-      channel: 'nurnberg',
-      created: 123438945,
-      image: 'http://img-9gag-fun.9cache.com/photo/aYwgMRv_700b.jpg',
-      message: 'Register your component to listen for changes in your data stores',
-      likes: 3423
-    }
-    */
-  ],
+  state: {
+        loading: false,
+        posts: []
+  },
 
   getInitialState: function() {
-      return {loading: false, posts: this.posts};
-   },
+    return this.state;
+  },
 
   onGetPostsOfChannel: function(channel) {
     console.log('get posts:' + channel);
-    this.posts = [];
-    this.trigger({loading: true, posts: this.posts});
+    this.state.posts = [];
+    this.state.loading = true;
+    this.trigger(this.state);
     agent.get('/api/c/' + channel, function(err, res) {
-      console.log(res);
       if(res.ok) {
         Actions.getPostsOfChannel.completed(res.body);
       } else {
@@ -50,10 +32,10 @@ var PostsStore = Reflux.createStore({
 
   onGetPostsOfChannelCompleted: function(result) {
     console.log('Received result: ' + result);
-    this.posts = result.posts;
-    this.trigger({loading: false, posts: this.posts});
+    this.state.posts = result.posts;
+    this.state.loading = false;
+    this.trigger(this.state);
   }
-
 });
 
 module.exports = PostsStore;

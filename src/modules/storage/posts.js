@@ -15,7 +15,8 @@ var posts = function(redisClient) {
         var postContent = {
           'id': postId,
           'message': post.message,
-          'created': ts
+          'created': ts,
+          'channel': channel
         };
         var postKey = redisConfig.POSTS_PREFIX + postId;
         redisClient.hmset(postKey, postContent, function(_err) {

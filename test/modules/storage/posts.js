@@ -16,6 +16,7 @@ describe('posts', function() {
     posts.addPostToChannel('someChannel', {'message': 'test message'}, function(err, post) {
       assert.ifError(err);
       assert.equal(post.message, 'test message', 'should set post message');
+      assert.equal(post.channel, 'someChannel', 'should set channel');
       done();
     });
   });

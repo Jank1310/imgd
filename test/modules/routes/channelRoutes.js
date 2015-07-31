@@ -41,19 +41,21 @@ describe('channelRoutes', function() {
 
   it('should post and return posts', function(done) {
     var postContent = {'message': 'some message 2'};
+    var channel = 'someChannel3';
     request(app)
-          .post('/api/c/someChannel3')
+          .post('/api/c/' + channel)
           .send(postContent)
           .end(function(err, res){
             assert.equal(res.status, 201);
             assert.deepEqual(res.body.message, postContent.message);
             request(app)
-                  .get('/api/c/someChannel3')
+                  .get('/api/c/' + channel)
                   .expect('Content-Type', /json/)
                   .expect(function(resp) {
                     assert.equal(resp.body.posts.length, 1);
                     assert.equal(resp.body.posts[0].id, 1);
                     assert.equal(resp.body.posts[0].message, postContent.message);
+                    assert.equal(resp.body.posts[0].channel, channel, 'should sent channel name');
                   })
                   .expect(200, done);
            });
