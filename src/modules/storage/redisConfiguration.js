@@ -10,7 +10,7 @@ module.exports.API_KEYS_HASH_PREFIX = 'apiKey:'; //apiKey:sdfajoiawroeiaajoigjg
 
 //channels
 module.exports.CHANNELS_SET = 'channels';
-module.exports.CHANNELS_SORT_BY_CREATION = 'channels.sorted_time';
+module.exports.CHANNELS_SORT_BY_LAST_POST = 'channels.sorted_last_post';
 module.exports.CHANNEL_PREFIX = 'postids:'; //channel:channel_name
 module.exports.CHANNEL_POSTS_POSTFIX = ':posts';
 

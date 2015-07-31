@@ -13,7 +13,7 @@ var channels = function(redisClient) {
       },
       function(done) {
         //save in sort by time set
-        redisClient.zadd(redisConfig.CHANNELS_SORT_BY_CREATION, moment().unix(), channel, done);
+        redisClient.zadd(redisConfig.CHANNELS_SORT_BY_LAST_POST, moment().unix(), channel, done);
       }], cb);
   }
 
@@ -35,7 +35,7 @@ var channels = function(redisClient) {
 
   function getRecent(limit, cb) {
     var unixNow = moment().unix();
-    redisClient.zrevrangebyscore(redisConfig.CHANNELS_SORT_BY_CREATION, unixNow, '0', 'LIMIT', 0, limit, function(err, result) {
+    redisClient.zrevrangebyscore(redisConfig.CHANNELS_SORT_BY_LAST_POST, unixNow, '0', 'LIMIT', 0, limit, function(err, result) {
       return cb(err, result);
     });
   }

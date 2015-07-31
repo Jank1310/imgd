@@ -2,6 +2,7 @@
 
 var Reflux = require('reflux');
 var Actions = require('actions/NewPostActionCreators');
+var ChannelActions = require('actions/ChannelsActionCreators');
 var agent = require('superagent');
 
 var NewPostStore = Reflux.createStore({
@@ -35,6 +36,7 @@ var NewPostStore = Reflux.createStore({
     this.state.posting = false;
     this.state.postSuccess = true;
     this.trigger(this.state);
+    ChannelActions.getChannels();
   },
 
   onPostToChannelFailed: function(error) {

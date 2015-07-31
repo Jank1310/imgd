@@ -10,7 +10,7 @@ var Link = Router.Link;
 
 var Post = React.createClass({
   render: function () {
-    var timeStr = moment(this.props.data.created).fromNow();
+    var timeStr = moment('x', this.props.data.created).fromNow();
     var channelUrl = '/c/' + this.props.data.channel;
     var channelText = '/' + this.props.data.channel;
     return (

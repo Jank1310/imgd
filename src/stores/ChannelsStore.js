@@ -2,10 +2,11 @@
 
 var Reflux = require('reflux');
 var Actions = require('actions/ChannelsActionCreators');
+var ChannelActions = require('actions/PostsActionCreators');
 var agent = require('superagent');
 
 var ChannelsStore = Reflux.createStore({
-  listenables: Actions,
+  listenables: [Actions, ChannelActions],
   popularChannels: [],
   recentChannels: [],
 
@@ -34,6 +35,14 @@ var ChannelsStore = Reflux.createStore({
 
    onGetChannelsFailed: function(error) {
      console.log(error);
+   },
+
+   onPostToChannel: function() {
+     console.log("post (channel)");
+   },
+
+   onPostToChannelCompleted: function() {
+      console.log("Post completed (channel)");
    }
 });
 

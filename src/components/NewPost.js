@@ -15,6 +15,10 @@ var NewPost = React.createClass({
     Reflux.connect(NewPostsStore, 'newPostStore')
   ],
 
+  componentWillMount: function() {
+    this.setState({channel: this.props.query.channel});
+  },
+
   componentWillUpdate: function(nextProps, nextState) {
     if(nextState.newPostStore.posting === false
       && nextState.newPostStore.postSuccess === true)
@@ -46,7 +50,8 @@ var NewPost = React.createClass({
     this.goBackToChannel();
   },
 
-  handleChannelChange: function() {
+  handleChannelChange: function(event) {
+    this.setState({channel: event.target.value});
   },
 
   render: function () {
@@ -70,7 +75,10 @@ var NewPost = React.createClass({
           <div className="ui form">
             <div className="field">
               <label>channel</label>
-              <input ref="channel" onChange={this.handleChannelChange} type="text" value={this.props.query.channel}/>
+              <input ref="channel" onChange={this.handleChannelChange} type="text" value={this.state.channel}/>
+            </div>
+            <div className="">
+              Image
             </div>
             <div className="field">
                <label>Message</label>

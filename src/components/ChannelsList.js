@@ -36,7 +36,8 @@ var ChannelsList = React.createClass({
           </div>
           {this.state.channels.recent.map(function(channel) {
             var url = '/c/' + channel;
-            return <Link className="item" to={url} key={channel}>{channel}</Link>;
+            var channelName = '/' + channel;
+            return <Link className="item" to={url} key={channel}>{channelName}</Link>;
           })}
         </div>
       </div>

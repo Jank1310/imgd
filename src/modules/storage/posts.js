@@ -22,10 +22,19 @@ var posts = function(redisClient) {
         redisClient.hmset(postKey, postContent, function(_err) {
           if(_err) { return cb(_err); }
           var channelPostsKey = redisConfig.CHANNEL_PREFIX + channel + redisConfig.CHANNEL_POSTS_POSTFIX;
-          redisClient.zadd(channelPostsKey, postId, postId, function(_err2) {
-            if(_err2) { return cb(_err2); }
-            return cb(null, postContent);
-          });
+          async.parallel([
+            function(done) {
+              redisClient.zadd(channelPostsKey, postId, postId, function(_err2) {
+                if(_err2) { return done(_err2); }
+                return done();
+              });
+            },
+            function(done) {
+              redisClient.zadd(redisConfig.CHANNELS_SORT_BY_LAST_POST, ts, channel, function(_err2) {
+                if(_err2) { return done(_err2); }
+                return done();
+              });
+            }], function(__err) { cb(__err, postContent); });
         });
       });
     },

@@ -17,7 +17,6 @@ var PostsStore = Reflux.createStore({
   },
 
   onGetPostsOfChannel: function(channel) {
-    console.log('get posts:' + channel);
     this.state.posts = [];
     this.state.loading = true;
     this.trigger(this.state);
@@ -31,7 +30,6 @@ var PostsStore = Reflux.createStore({
   },
 
   onGetPostsOfChannelCompleted: function(result) {
-    console.log('Received result: ' + result);
     this.state.posts = result.posts;
     this.state.loading = false;
     this.trigger(this.state);
