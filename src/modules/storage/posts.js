@@ -6,40 +6,49 @@ var async = require('async');
 var isSafeInteger = require('validate.io-safe-integer');
 
 var posts = function(redisClient) {
-  return {
-    addPostToChannel: function(channel, post, cb) {
-      var ts = moment().unix();
-      redisClient.incr(redisConfig.POSTS_ID_KEY, function(err, postId) {
-        if(err) { return cb(err); }
-        //use post content to prevent unwanted key from req.body
-        var postContent = {
-          'id': postId,
-          'message': post.message,
-          'created': ts,
-          'channel': channel
-        };
-        var postKey = redisConfig.POSTS_PREFIX + postId;
-        redisClient.hmset(postKey, postContent, function(_err) {
-          if(_err) { return cb(_err); }
-          var channelPostsKey = redisConfig.CHANNEL_PREFIX + channel + redisConfig.CHANNEL_POSTS_POSTFIX;
-          async.parallel([
-            function(done) {
-              redisClient.zadd(channelPostsKey, postId, postId, function(_err2) {
-                if(_err2) { return done(_err2); }
-                return done();
-              });
-            },
-            function(done) {
-              redisClient.zadd(redisConfig.CHANNELS_SORT_BY_LAST_POST, ts, channel, function(_err2) {
-                if(_err2) { return done(_err2); }
-                return done();
-              });
-            }], function(__err) { cb(__err, postContent); });
+
+  function _addPostIdToChannel(postId, channel, callback) {
+    var channelPostsKey = redisConfig.CHANNEL_PREFIX + channel + redisConfig.CHANNEL_POSTS_POSTFIX;
+    redisClient.zadd(channelPostsKey, postId, postId, function(err) {
+      if(err) { return callback(err); }
+      return callback();
+    });
+  }
+
+  function _setLastPostDateToChannel(channel, timestamp, callback) {
+    redisClient.zadd(redisConfig.CHANNELS_SORT_BY_LAST_POST, timestamp, channel, callback);
+  }
+
+  function _updateNumberOfPostsChannelSort(channel, callback) {
+    redisClient.zincrby(redisConfig.CHANNELS_SORT_BY_NUMBER_OF_POSTS, 1, channel, callback);
+  }
+
+  function addPostToChannel(channel, post, cb) {
+    var ts = moment().unix();
+    redisClient.incr(redisConfig.POSTS_ID_KEY, function(err, postId) {
+      if(err) { return cb(err); }
+      var postContent = {
+        id: postId,
+        message: post.message,
+        created: ts,
+        channel: channel
+      };
+      var postKey = redisConfig.POSTS_PREFIX + postId;
+      redisClient.hmset(postKey, postContent, function(_err) {
+        if(_err) { return cb(_err); }
+
+        async.parallel([
+          function(done) { _addPostIdToChannel(postContent.id, postContent.channel, done); },
+          function(done) { _setLastPostDateToChannel(postContent.channel, postContent.created, done); },
+          function(done) { _updateNumberOfPostsChannelSort(postContent.channel, done); }
+        ], function(__err) {
+          cb(__err, postContent);
         });
       });
-    },
+    });
+  }
 
-    getPostsOfChannel: function(channel, before, postCount, cb) {
+    function getPostsOfChannel(channel, before, postCount, cb) {
       if(!before || isSafeInteger(parseInt(before)) === false) {
         before = '+inf'; //latest post
       }
@@ -69,7 +78,10 @@ var posts = function(redisClient) {
       });
     }
 
-  };
+    return {
+      addPostToChannel: addPostToChannel,
+      getPostsOfChannel: getPostsOfChannel
+    };
 };
 
 

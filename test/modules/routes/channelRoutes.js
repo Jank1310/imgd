@@ -26,6 +26,7 @@ describe('channelRoutes', function() {
     }, function() {
         request(app)
         .get('/api/recent/channels?limit=2')
+        .on('error', done)
         .expect({recentChannels: ['channel4', 'channel3']})
         .expect(200, done);
     });
@@ -34,6 +35,7 @@ describe('channelRoutes', function() {
   it('should return no posts when channel does not exist', function(done) {
     request(app)
           .get('/api/c/someChannel')
+          .on('error', done)
           .expect('Content-Type', /json/)
           .expect({'posts': []})
           .expect(200, done);
@@ -44,6 +46,7 @@ describe('channelRoutes', function() {
     var channel = 'someChannel3';
     request(app)
           .post('/api/c/' + channel)
+          .on('error', done)
           .send(postContent)
           .end(function(err, res){
             assert.equal(res.status, 201);

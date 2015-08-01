@@ -2,48 +2,36 @@
 
 var Reflux = require('reflux');
 var Actions = require('actions/ChannelsActionCreators');
-var ChannelActions = require('actions/PostsActionCreators');
-var agent = require('superagent');
+var api = require('./api');
+var async = require('async');
 
 var ChannelsStore = Reflux.createStore({
-  listenables: [Actions, ChannelActions],
+  listenables: [Actions],
   popularChannels: [],
   recentChannels: [],
 
   getInitialState: function() {
-      Actions.getChannels();
-      return {popular: this.popularChannels, recent: this.recentChannels};
-   },
+    Actions.getChannels();
+    return {popular: this.popularChannels, recent: this.recentChannels};
+  },
 
-   onGetChannels: function() {
-     agent
-      .get('/api/recent/channels')
-      .end(function(err, res) {
-        if(res.ok) {
-          Actions.getChannels.completed(res.body);
-        } else {
-          Actions.getChannels.failed(res.error);
-        }
-      });
-   },
+  onGetChannels: function() {
+    async.parallel([api.getRecentChannels, api.getHotChannels],
+      function(err, result) {
+        if(err) { return Actions.getChannels.failed(err); }
+        Actions.getChannels.completed({recent: result[0], hot: result[1]});
+      }
+    );
+  },
 
-   onGetChannelsCompleted: function(res) {
-    console.log(res);
+  onGetChannelsCompleted: function(res) {
     this.recentChannels = res.recentChannels;
     this.trigger({popular: this.popularChannels, recent: this.recentChannels});
-   },
+  },
 
-   onGetChannelsFailed: function(error) {
-     console.log(error);
-   },
-
-   onPostToChannel: function() {
-     console.log("post (channel)");
-   },
-
-   onPostToChannelCompleted: function() {
-      console.log("Post completed (channel)");
-   }
+  onGetChannelsFailed: function(error) {
+    console.log('Could not get channels:', error);
+  }
 });
 
 module.exports = ChannelsStore;

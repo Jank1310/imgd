@@ -34,6 +34,7 @@ describe('loginRoutes', function() {
       };
       request(app)
             .post('/api/register')
+            .on('error', done)
             .send(sampleUser)
             .end(function(err, res){
               assert.equal(res.status, 201);
@@ -50,6 +51,7 @@ describe('loginRoutes', function() {
       };
       request(app)
             .post('/api/register')
+            .on('error', done)
             .send(registration)
             .end(function(err, res){
               assert.equal(res.status, 400);
@@ -66,6 +68,7 @@ describe('loginRoutes', function() {
       };
       request(app)
             .post('/api/register')
+            .on('error', done)
             .send(registration)
             .end(function(err, res){
               assert.equal(res.status, 400);
@@ -84,6 +87,7 @@ describe('loginRoutes', function() {
       this.slow(2000);
       request(app)
             .post('/api/login')
+            .on('error', done)
             .send({email: sampleUser.email, password: sampleUser.password})
             .end(function(err, res){
               assert.equal(res.status, 200);
@@ -99,6 +103,7 @@ describe('loginRoutes', function() {
       this.slow(2000);
       request(app)
             .post('/api/login')
+            .on('error', done)
             .send({email: 'someWrongEmail', password: sampleUser.password})
             .end(function(err, res){
               assert.equal(res.status, 401);
@@ -110,6 +115,7 @@ describe('loginRoutes', function() {
       this.slow(2000);
       request(app)
             .post('/api/login')
+            .on('error', done)
             .send({email: sampleUser.email, password: 'wrongpassword'})
             .end(function(err, res){
               assert.equal(res.status, 401);
