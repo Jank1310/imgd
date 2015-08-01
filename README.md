@@ -17,8 +17,10 @@ To run tests use `npm test` or `npm run test:watch` if you want to run the test 
 * `apiKey:HASHED_API_KEY` - hash with api key details: created, userId
 
 * `channels` - sorted set with all channels. (The algorithm for the score is not clear yet)
-* `channels.sorted_time` - sorted set of all channels. Score == creation time
+* `channels.sorted_last_post` - sorted set of all channels. Score == creation time
+* `channels.sorted_number_of_post` - sorted set of all channels. Score == number of posts
 * `channel:CHANNEL_ID.posts` - sorted set with value = POST_ID and score = post_id
 
 * `post:POST_ID` - hash with post details
-* `global.posts` - sort set with all posts, score is the "hottnes"
+* `global.posts` - sorted set with all (last 1000) posts. Score == creation time
+* `global.posts.hot` - sorted set with all (last 1000) posts. Score == hottnes (creation + log(likes))

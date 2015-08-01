@@ -49,7 +49,7 @@ var PostsStore = Reflux.createStore({
   },
   onPostToChannelCompleted: function() {
     ChannelActions.getChannels();
-  },
+  }
 });
 
 module.exports = PostsStore;
