@@ -32,6 +32,22 @@ describe('channelRoutes', function() {
     });
   });
 
+  it('should return hot channels', function(done) {
+    var channelList = [{'channel1': 2}, {'channel2': 3}, {'channel3': 4}, {'channel4': 2}];
+    async.each(channelList, function(channel, cb) {
+      var channelName = Object.keys(channel)[0];
+      async.times(channel[channelName], function(n, next){
+        request(app).post('/api/c/' + channelName).send({'message': 'new message' + n}).end(next);
+      }, cb);
+    }, function() {
+        request(app)
+          .get('/api/hot/channels?limit=2')
+          .on('error', done)
+          .expect({hotChannels: ['channel3', 'channel2']})
+          .expect(200, done);
+    });
+  });
+
   it('should return no posts when channel does not exist', function(done) {
     request(app)
           .get('/api/c/someChannel')

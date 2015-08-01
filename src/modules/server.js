@@ -60,6 +60,7 @@ var server = function(redisClient) {
 
   //api channel list
   app.get('/api/recent/channels', channelRoutes.getRecentChannels);
+  app.get('/api/hot/channels', channelRoutes.getHotChannels);
   //api channels and posts
   app.get('/api/c/:channel', channelRoutes.getChannel);
   app.post('/api/c/:channel', channelRoutes.postToChannel);

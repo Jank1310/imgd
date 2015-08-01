@@ -1,8 +1,8 @@
 var assert = require('assert');
 var redisClient = require('redis').createClient();
+var redisConfig = require('../../../src/modules/storage/redisConfiguration');
 var async = require('async');
 var posts = require('../../../src/modules/storage/posts.js')(redisClient);
-
 
 describe('posts', function() {
   beforeEach(function(cb) {
@@ -16,9 +16,30 @@ describe('posts', function() {
     posts.addPostToChannel('someChannel', {'message': 'test message'}, function(err, post) {
       assert.ifError(err);
       assert.equal(post.message, 'test message', 'should set post message');
-      assert.equal(post.channel, 'someChannel', 'should set channel');      
+      assert.equal(post.channel, 'someChannel', 'should set channel');
       done();
     });
+  });
+
+  it('should add multiple posts and update the correct sorted sets in redis', function(done) {
+    var channel = 'theChannel';
+    var postList = [{message: 'test message'}, {message: 'test message2'},
+      {message: 'test message3'}, {message: 'test message4'}];
+    var checkRedis = function() {
+      async.parallel([
+        function(cb) {
+            redisClient.zscore(redisConfig.CHANNELS_SORT_BY_NUMBER_OF_POSTS, channel, function(err, result) {
+              cb(err, result);
+          });
+        }
+      ], function(err, result) {
+        assert.equal(4, result[0]);
+        done(err);
+      });
+    };
+    async.each(postList, function(post, cb) {
+      posts.addPostToChannel(channel, post, cb);
+    }, checkRedis);
   });
 
   it('should get posts of channel', function(done) {

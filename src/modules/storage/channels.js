@@ -35,15 +35,18 @@ var channels = function(redisClient) {
 
   function getRecent(limit, cb) {
     var unixNow = moment().unix();
-    redisClient.zrevrangebyscore(redisConfig.CHANNELS_SORT_BY_LAST_POST, unixNow, '0', 'LIMIT', 0, limit, function(err, result) {
-      return cb(err, result);
-    });
+    redisClient.zrevrangebyscore(redisConfig.CHANNELS_SORT_BY_LAST_POST, unixNow, '0', 'LIMIT', 0, limit, cb);
+  }
+
+  function getHot(limit, cb) {
+    redisClient.zrevrangebyscore(redisConfig.CHANNELS_SORT_BY_NUMBER_OF_POSTS, '+inf', '1', 'LIMIT', 0, limit, cb);
   }
 
   return {
     channelExists: channelExists,
     createChannel: createChannel,
-    getRecent: getRecent
+    getRecent: getRecent,
+    getHot: getHot
   };
 };
 

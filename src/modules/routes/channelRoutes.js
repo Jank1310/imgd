@@ -67,6 +67,19 @@ module.exports = function(channels, posts) {
         if(err) { return serverError(req, res, err); }
         return res.json({recentChannels: result});
       });
+    },
+
+    getHotChannels: function(req, res) {
+      if(req.query.limit) {
+        if(!validator.isNumeric(req.query.limit) || req.query.limit < 0 || req.query.limit > 100) {
+          return res.status(400).send({error: 'Count parameter exceeds limits 0 < N < 100', errorCode: 100});
+        }
+      }
+      var limit = req.query.limit ? req.query.limit : 10;
+      channels.getHot(limit, function(err, result) {
+        if(err) { return serverError(req, res, err); }
+        return res.json({hotChannels: result});
+      });
     }
   };
 };
