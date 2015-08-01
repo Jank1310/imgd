@@ -54,14 +54,14 @@ describe('channels', function() {
     });
   });
 
-  it('should return hot channels', function(done) {
+  it('should return popular channels', function(done) {
     var channelList = [{'channel1': 2}, {'channel2': 3}, {'channel3': 4}, {'channel4': 2}];
     async.each(channelList, function(channel, cb) {
       var channelName = Object.keys(channel)[0];
       var channelScore = channel[channelName];
       redisClient.zadd(redisConfig.CHANNELS_SORT_BY_NUMBER_OF_POSTS, channelScore, channelName, cb);
     }, function() {
-      channels.getHot(2, function(err, hotChannels) {
+      channels.getPopular(2, function(err, hotChannels) {
         assert.ifError(err);
         assert.equal(hotChannels.length, 2, 'should contain 2 channels');
         assert.equal(hotChannels[0], 'channel3');

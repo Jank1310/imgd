@@ -3,28 +3,19 @@
 var React = require('react/addons');
 var Reflux = require('reflux');
 
-var Actions = require('actions/NewPostActionCreators');
+var Actions = require('actions/PostsActionCreators');
 var Router = require('react-router');
-var NewPostsStore = require('stores/NewPostStore');
 
 require('styles/NewPost.scss');
 
 var NewPost = React.createClass({
   mixins: [
     Router.Navigation,
-    Reflux.connect(NewPostsStore, 'newPostStore')
+    Reflux.listenTo(Actions.postToChannel.completed, 'postToChannelCompleted')
   ],
 
   componentWillMount: function() {
     this.setState({channel: this.props.query.channel});
-  },
-
-  componentWillUpdate: function(nextProps, nextState) {
-    if(nextState.newPostStore.posting === false
-      && nextState.newPostStore.postSuccess === true)
-    {
-      this.goBackToChannel(true);
-    }
   },
 
   goBackToChannel: function(posted) {
@@ -43,7 +34,13 @@ var NewPost = React.createClass({
   handlePost: function() {
     var message = React.findDOMNode(this.refs.message).value;
     var channel = React.findDOMNode(this.refs.channel).value;
+    this.setState({posting: true});
     Actions.postToChannel(channel, message);
+  },
+
+  postToChannelCompleted: function() {
+    this.setState({posting: false});
+    this.goBackToChannel(true);
   },
 
   handleCancel: function() {
@@ -60,7 +57,7 @@ var NewPost = React.createClass({
         Post
       </button>
     );
-    if(this.state.newPostStore.posting) {
+    if(this.state.posting) {
       postButton = (
         <button onClick={this.handlePost} className="ui primary loading button">
           Post

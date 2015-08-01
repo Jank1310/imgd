@@ -1,8 +1,10 @@
 'use strict';
 
 var Reflux = require('reflux');
-var Actions = require('actions/PostsActionCreators');
 var agent = require('superagent');
+
+var Actions = require('actions/PostsActionCreators');
+var ChannelActions = require('actions/ChannelsActionCreators');
 
 var PostsStore = Reflux.createStore({
   listenables: Actions,
@@ -28,12 +30,26 @@ var PostsStore = Reflux.createStore({
       }
     });
   },
-
   onGetPostsOfChannelCompleted: function(result) {
     this.state.posts = result.posts;
     this.state.loading = false;
     this.trigger(this.state);
-  }
+  },
+
+  onPostToChannel: function(channel, message) {
+    console.log('Post!', channel, message);
+    var url = '/api/c/' + channel;
+    agent.post(url).send({message: message}).end(function(err, res) {
+      if(res.ok) {
+        Actions.postToChannel.completed(res.body);
+      } else {
+        Actions.postToChannel.failed(res.error);
+      }
+    });
+  },
+  onPostToChannelCompleted: function() {
+    ChannelActions.getChannels();
+  },
 });
 
 module.exports = PostsStore;

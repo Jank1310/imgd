@@ -11,21 +11,21 @@ var getRecentChannels = function(callback) {
    .on('error', handleAPIError)
    .end(function(err, res) {
      if(err) { return callback(err); }
-     return callback(null, res.recentChannels);
+     return callback(null, res.body.recentChannels);
    });
 };
 
-var getHotChannels = function(callback) {
-  console.log('API: get hot channels');
+var getPopularChannels = function(callback) {
+  console.log('API: get popular channels');
   agent
-    .get('/api/hot/channels')
+    .get('/api/popular/channels')
     .on('error', handleAPIError)
     .end(function(err, res) {
       if(err) { return callback(err); }
-      return callback(null, res.hotChannels);
+      return callback(null, res.body.popularChannels);
     });
 };
 
 
 module.exports.getRecentChannels = getRecentChannels;
-module.exports.getHotChannels = getHotChannels;
+module.exports.getPopularChannels = getPopularChannels;

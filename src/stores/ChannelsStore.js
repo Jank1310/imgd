@@ -16,16 +16,18 @@ var ChannelsStore = Reflux.createStore({
   },
 
   onGetChannels: function() {
-    async.parallel([api.getRecentChannels, api.getHotChannels],
+    async.parallel([api.getRecentChannels, api.getPopularChannels],
       function(err, result) {
         if(err) { return Actions.getChannels.failed(err); }
-        Actions.getChannels.completed({recent: result[0], hot: result[1]});
+        console.log('result', result);
+        Actions.getChannels.completed({recent: result[0], popular: result[1]});
       }
     );
   },
 
-  onGetChannelsCompleted: function(res) {
-    this.recentChannels = res.recentChannels;
+  onGetChannelsCompleted: function(result) {
+    this.recentChannels = result.recent;
+    this.popularChannels = result.popular;
     this.trigger({popular: this.popularChannels, recent: this.recentChannels});
   },
 

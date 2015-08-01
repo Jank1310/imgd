@@ -38,7 +38,7 @@ var channels = function(redisClient) {
     redisClient.zrevrangebyscore(redisConfig.CHANNELS_SORT_BY_LAST_POST, unixNow, '0', 'LIMIT', 0, limit, cb);
   }
 
-  function getHot(limit, cb) {
+  function getPopular(limit, cb) {
     redisClient.zrevrangebyscore(redisConfig.CHANNELS_SORT_BY_NUMBER_OF_POSTS, '+inf', '1', 'LIMIT', 0, limit, cb);
   }
 
@@ -46,7 +46,7 @@ var channels = function(redisClient) {
     channelExists: channelExists,
     createChannel: createChannel,
     getRecent: getRecent,
-    getHot: getHot
+    getPopular: getPopular
   };
 };
 
