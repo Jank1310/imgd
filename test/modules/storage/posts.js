@@ -45,7 +45,7 @@ describe('posts', function() {
   it('should get posts of channel', function(done) {
     var channel = 'someChannel';
     var postsArr = [{'message': 'test message 1'}, {'message': 'test message 2'}];
-    async.each(postsArr, function(item, cb) {
+    async.eachSeries(postsArr, function(item, cb) {
       posts.addPostToChannel(channel, item, cb);
     }, function() {
       posts.getPostsOfChannel(channel, null, 100, function(err, postsOfChannel) {
@@ -57,4 +57,18 @@ describe('posts', function() {
     });
   });
 
+  it('should add and get posts to global list', function(done) {
+    var channel = 'someChannel';
+    var postsArr = [{'message': 'test message 1'}, {'message': 'test message 2'}];
+    async.eachSeries(postsArr, function(item, cb) {
+      posts.addPostToChannel(channel, item, cb);
+    }, function() {
+      posts.getLastPosts(null, 100, function(err, globalPosts) {
+        assert.equal(globalPosts.length, 2, 'should contain 2 posts');
+        assert.equal(globalPosts[1].message, postsArr[0].message); //watch the sorting!
+        assert.equal(globalPosts[0].message, postsArr[1].message);
+        done();
+      });
+    });
+  });
 });

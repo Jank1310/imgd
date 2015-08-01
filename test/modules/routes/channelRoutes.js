@@ -69,6 +69,7 @@ describe('channelRoutes', function() {
             assert.deepEqual(res.body.message, postContent.message);
             request(app)
                   .get('/api/c/' + channel)
+                  .on('error', done)
                   .expect('Content-Type', /json/)
                   .expect(function(resp) {
                     assert.equal(resp.body.posts.length, 1);
@@ -78,5 +79,27 @@ describe('channelRoutes', function() {
                   })
                   .expect(200, done);
            });
+   });
+
+   it('should post and return global posts', function(done) {
+     var postContent = {'message': 'some message 2'};
+     var channel = 'someChannel3';
+     request(app)
+           .post('/api/c/' + channel)
+           .on('error', done)
+           .send(postContent)
+           .end(function() {
+             request(app)
+                   .get('/api/c/')
+                   .on('error', done)
+                  // .expect('Content-Type', /json/)
+                   .expect(function(resp) {
+                     assert.equal(resp.body.posts.length, 1);
+                     assert.equal(resp.body.posts[0].id, 1);
+                     assert.equal(resp.body.posts[0].message, postContent.message);
+                     assert.equal(resp.body.posts[0].channel, channel, 'should sent channel name');
+                   })
+                   .expect(200, done);
+            });
    });
 });

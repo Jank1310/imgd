@@ -22,5 +22,5 @@ To run tests use `npm test` or `npm run test:watch` if you want to run the test 
 * `channel:CHANNEL_ID.posts` - sorted set with value = POST_ID and score = post_id
 
 * `post:POST_ID` - hash with post details
-* `global.posts` - sorted set with all (last 1000) posts. Score == creation time
+* `global.posts` - sorted set with all (last 1000) posts. score == post id
 * `global.posts.hot` - sorted set with all (last 1000) posts. Score == hottnes (creation + log(likes))

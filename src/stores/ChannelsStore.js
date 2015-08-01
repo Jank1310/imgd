@@ -19,7 +19,6 @@ var ChannelsStore = Reflux.createStore({
     async.parallel([api.getRecentChannels, api.getPopularChannels],
       function(err, result) {
         if(err) { return Actions.getChannels.failed(err); }
-        console.log('result', result);
         Actions.getChannels.completed({recent: result[0], popular: result[1]});
       }
     );

@@ -18,3 +18,4 @@ module.exports.CHANNEL_POSTS_POSTFIX = ':posts';
 //posts
 module.exports.POSTS_PREFIX = 'post:'; //posts:uniqueid
 module.exports.POSTS_ID_KEY = 'posts_next_id';
+module.exports.ALL_POSTS = 'global.posts';

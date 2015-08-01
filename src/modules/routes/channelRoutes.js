@@ -32,6 +32,26 @@ module.exports = function(channels, posts) {
       });
     },
 
+    getGlobal: function(req, res) {
+      if(req.query.before) {
+        if(!validator.isNumeric(req.query.before)) {
+          return res.status(400).send({error: 'Before query parameter malformed', errorCode: 100});
+        }
+      }
+      if(req.query.limit) {
+        if(!validator.isNumeric(req.query.limit) || req.query.limit < 0 || req.query.limit > 100) {
+          return res.status(400).send({error: 'Count parameter exceeds limits 0 < N < 100', errorCode: 100});
+        }
+      }
+      var limit = req.query.limit ? req.query.limit : 10;
+      posts.getLastPosts(req.query.before, limit, function(err, postsArray) {
+        if(err) {
+          return res.status(500).send('Something broke!');
+        }
+        return res.json({posts: postsArray});
+      });
+    },
+
     postToChannel: function(req, res) {
       if(req.body && req.body.message && validator.isAscii(req.params.channel)) {
         var createPost = function() {

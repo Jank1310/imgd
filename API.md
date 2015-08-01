@@ -122,6 +122,7 @@ Returns the recent channels sort by creation time
 ### GET
 Returns the posts of a channel. If the channel does not exist,
 an empty posts array is returned.
+If no channel is given, a list of global posts (from all channels) is returned.
 
 + Response 200 (application/json)
 
