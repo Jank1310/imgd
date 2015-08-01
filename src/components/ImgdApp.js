@@ -9,6 +9,7 @@ require('semantic/semantic.css');
 var React = require('react/addons');
 var ChannelsList = require('components/ChannelsList');
 var Router = require('react-router');
+var Link = Router.Link;
 var RouteHandler = Router.RouteHandler;
 // App
 require('../styles/ImgdApp.scss');
@@ -26,7 +27,7 @@ var ImgdApp = React.createClass({
           <div className="row">
             <div className="two wide column">
               <div className="ui sticky">
-                <h1 className="logo">imgd</h1>
+                <h1 className="logo"><Link to='/'>imgd</Link></h1>
                 <ChannelsList />
               </div>
             </div>
