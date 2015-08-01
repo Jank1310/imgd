@@ -33,6 +33,21 @@ var ImgdApp = React.createClass({
             </div>
             <div id="channel" className="five wide column">
               <RouteHandler />
+              <div className="ui divider"></div>
+              <div className="ui center aligned disabled header">
+                <div className="sub header">Made with <i className="heart icon"></i> in Nuremberg</div>
+                <div className="sub header ui horizontal center aligned bulleted list">
+                  <a className="item">
+                    About Us
+                  </a>
+                  <a className="item">
+                    Sitemap
+                  </a>
+                  <a className="item">
+                    Contact
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
