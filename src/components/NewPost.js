@@ -2,7 +2,7 @@
 
 var React = require('react/addons');
 var Reflux = require('reflux');
-var Dropzone = require('react-dropzone');
+var DropzoneComponent = require('react-dropzone-component');
 var classNames = require('classnames');
 
 var Actions = require('actions/PostsActionCreators');
@@ -65,12 +65,16 @@ var NewPost = React.createClass({
     this.setState({channel: event.target.value});
   },
 
-  onDrop: function(files) {
+  onAddedFile: function(files) {
+    console.log("Added", files);
     this.setState({file: files[0]});
   },
 
+  onDrop: function(param) {
+    console.log("Drop", param);
+  },
+
   render: function () {
-    console.log("render");
     var postButton = (
       <button onClick={this.handlePost} className="ui primary button">
         Post
@@ -84,6 +88,7 @@ var NewPost = React.createClass({
       );
     }
 
+/*
     var image = (
       <div>
         <h2 className="ui center aligned icon header">
@@ -98,6 +103,7 @@ var NewPost = React.createClass({
         </div>
       );
     }
+*/
 
     var formClasses = classNames('ui', {'error': this.state.postError}, 'form');
 
@@ -111,7 +117,19 @@ var NewPost = React.createClass({
        );
     }
 
+    var dropzoneConfig = {
+      allowedFiletypes: ['.jpg', '.png', '.gif'],
+      showFiletypeIcon: true,
+      maxFiles: 1,
+      postUrl: '',
+      url: '',
+      autoProcessQueue: false
+    };
 
+    var dropzoneEventHandlers = {
+      addedfile: this.onAddedFile,
+      drop: this.onDrop
+    };
 
     return (
       <div className="ui card">
@@ -124,9 +142,10 @@ var NewPost = React.createClass({
             </div>
             <div className="field">
               <label>Image</label>
-              <Dropzone className="center aligned" onDrop={this.onDrop}>
-                {image}
-              </Dropzone>
+              <DropzoneComponent
+                config={dropzoneConfig}
+                eventHandlers={dropzoneEventHandlers}
+                />
             </div>
             <div className="field">
                <label>Message</label>
