@@ -39,7 +39,7 @@ var getPostsOfChannel = function(channel, callback) {
 var postToChannel = function(channel, message, callback) {
   console.log('API: post to channel', channel, message);
   if(!channel) {
-    throw 'Cannot post to global channel. Channel is null or undefined!';
+    return callback('Cannot post to global channel. Channel is null or undefined!');
   }
   var url = '/api/c/' + channel;
   agent.post(url).send({message: message}).end(function(err, res) {

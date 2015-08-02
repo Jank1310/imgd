@@ -38,7 +38,7 @@ var Channel = React.createClass({
   render: function () {
     var channelName = '/global';
     if(this.props.params.channel) {
-      channelName = '/' + this.props.params.channel;
+      channelName = '/c/' + this.props.params.channel;
     }
 
     var channelContent;
