@@ -1,6 +1,6 @@
 'use strict';
 
-var server = function(redisClient) {
+var server = function(redisClient, fileStorage) {
   var express = require('express');
   var app = express();
   var bodyParser = require('body-parser');
@@ -8,10 +8,14 @@ var server = function(redisClient) {
   var posts = require('./storage/posts')(redisClient);
   var users = require('./storage/users')(redisClient);
   var apiKeys = require('./storage/apiKeys')(redisClient);
-  var channelRoutes = require('./routes/channelRoutes.js')(channels, posts);
-  var loginRoutes = require('./routes/loginRoutes.js')(users, apiKeys);
+  var channelRoutes = require('./routes/channelRoutes')(channels, posts);
+  var loginRoutes = require('./routes/loginRoutes')(users, apiKeys);
+  var imagesRoutes = require('./routes/imagesRoutes')(fileStorage);
   var proxy = require('http-proxy').createProxyServer();
   var agent = require('superagent');
+  var tmp = require('tmp');
+  var multer = require('multer');
+  var upload = multer({ dest: tmp.dirSync().name, limits: {fileSize: 10485760} });
 
   // middleware
   app.use(bodyParser.json()); // for parsing application/json
@@ -65,6 +69,9 @@ var server = function(redisClient) {
   app.get('/api/c/', channelRoutes.getGlobal);
   app.get('/api/c/:channel', channelRoutes.getChannel);
   app.post('/api/c/:channel', channelRoutes.postToChannel);
+  //images
+  app.get('/api/images/:imageId', imagesRoutes.getImage);
+  app.post('/api/images/', upload.single('image'), imagesRoutes.addImage);
 
   return app;
 };

@@ -148,14 +148,15 @@ Adding a post to an non existent channel will "create" the channel.
     + channel (string, optional) - name of the channel
 
 ### POST
-+ Request (multipart/form-data)
++ Request (application/json)
 Send message and other values as json.
-Send image another part
+The image must be uploaded upfront!
 
   + Body
 
             {
-                "message": "The message"
+                "message": "The message",
+                "imageId": "A_VALID_IMAGE_ID"
             }
 
 + Response 201 (application/json)
@@ -170,5 +171,43 @@ Response if the post is successfully added to the channel.
               },
               "channel": "channelname",
               "message": "Some message",
-              "image": "link to the image"
+              "imageId": "IMAGE_ID",
+              "imageUrl": "url of image"
+              "streamImageId": "STREAM_IMAGE_ID",
+              "streamImageUrl": "url of smaller version"
             }
+
+# Group Images
+
+## Add image [/images/]
+Upload an image and get url/id of the full size image and the url/id of the smaller sized image.
+
+### POST
++ Request  (multipart/form-data)
+
++ Response 201
+
+  + Body
+
+            {
+              "imageId": "IMAGE_ID",
+              "imageUrl": "url of image",
+              "streamImageId": "STREAM_IMAGE_ID",
+              "streamImageUrl": "url of smaller version"
+            }
+
+## Get image [/images/{imageId}]
+
++ Parameters
+    + imageId (string, required) - id of the image
+
+### GET
+
++ Response 200 (image/jpeg)
+
+  + Body
+
+
++ Response 404
+
+  + Body
