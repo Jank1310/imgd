@@ -2,19 +2,23 @@
 
 var redis = require('redis'),
     redisClient = redis.createClient();
-
-var server = require('../../../src/modules/server');
 var request = require('supertest');
 var assert = require('assert');
 var async = require('async');
-var tmp = require('tmp');
 
+var server = require('../../../src/modules/server');
+var redisFiles = require('../../../src/modules/storage/filesRedis')(redisClient);
 
 describe('imageRoutes', function() {
   var app;
-  beforeEach(function() {
-    var localFiles = require('../../../src/modules/storage/filesLocal')(tmp.dirSync().name);
-    app = server.newServer(redisClient, localFiles);
+  beforeEach(function(done) {
+    redisClient.select(2, function() {
+      redisClient.flushdb(function() {
+        app = server.newServer(redisClient, redisFiles);
+        done();
+      });
+    });
+
   });
 
   it('should add image (jpg) and return ids', function(done) {
