@@ -5,7 +5,8 @@ var redis = require('redis'),
     client.on('error', function (err) {
       console.log('Redis error: ' + err);
     });
-var fileStorage = require('./src/modules/storage/filesRedis')(client);
+var filesDir = '.files/';
+var fileStorage = require('./src/modules/storage/filesRedis')(client, filesDir);
 var server = require('./src/modules/server').newServer(client, fileStorage);
 
 var httpServer = server.listen(8080, function () {

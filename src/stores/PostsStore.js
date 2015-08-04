@@ -35,8 +35,8 @@ var PostsStore = Reflux.createStore({
     this.trigger(this.state);
   },
 
-  onPostToChannel: function(channel, message) {
-    api.postToChannel(channel, message, function(err, post) {
+  onPostToChannel: function(channel, message, image) {
+    api.postToChannel(channel, message, image, function(err, post) {
       if(!err) {
         Actions.postToChannel.completed(post);
       } else {

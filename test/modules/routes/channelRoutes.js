@@ -7,6 +7,7 @@ var request = require('supertest');
 var assert = require('assert');
 var async = require('async');
 var sinon = require('sinon');
+var path = require('path');
 
 describe('channelRoutes', function() {
   var app;
@@ -15,7 +16,7 @@ describe('channelRoutes', function() {
   var defaultPost = {message: 'some message 2', imageId: 'someImageId', previewImageId: 'somePreviewImageId'};
 
   beforeEach(function(done) {
-    filesStorage = { exists: function() {} };
+    filesStorage = { exists: function() {}, imagesUrlPrefix: '/api/images' };
     filesStorageExistsStub = sinon.stub(filesStorage, 'exists');
     filesStorageExistsStub.withArgs(defaultPost.imageId).callsArgWith(1, null, true);
     filesStorageExistsStub.withArgs(defaultPost.previewImageId).callsArgWith(1, null, true);
@@ -86,6 +87,8 @@ describe('channelRoutes', function() {
                 assert.equal(resp.body.posts[0].message, defaultPost.message);
                 assert.equal(resp.body.posts[0].imageId, defaultPost.imageId);
                 assert.equal(resp.body.posts[0].previewImageId, defaultPost.previewImageId);
+                assert.equal(resp.body.posts[0].imageUrl, path.join(filesStorage.imagesUrlPrefix, defaultPost.imageId));
+                assert.equal(resp.body.posts[0].previewImageUrl, path.join(filesStorage.imagesUrlPrefix, defaultPost.previewImageId));
                 assert.equal(resp.body.posts[0].channel, channel, 'should sent channel name');
               })
               .expect(200, done);
@@ -121,6 +124,8 @@ describe('channelRoutes', function() {
                      assert.equal(resp.body.posts[0].message, defaultPost.message);
                      assert.equal(resp.body.posts[0].imageId, defaultPost.imageId);
                      assert.equal(resp.body.posts[0].previewImageId, defaultPost.previewImageId);
+                     assert.equal(resp.body.posts[0].imageUrl, path.join(filesStorage.imagesUrlPrefix, defaultPost.imageId));
+                     assert.equal(resp.body.posts[0].previewImageUrl, path.join(filesStorage.imagesUrlPrefix, defaultPost.previewImageId));
                      assert.equal(resp.body.posts[0].channel, channel, 'should sent channel name');
                    })
                    .expect(200, done);

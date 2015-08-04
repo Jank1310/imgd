@@ -22,8 +22,8 @@ var Post = React.createClass({
               <div className="right aligned"><strong><Link to={channelUrl}>{channelText}</Link></strong></div>
               <span className="meta">{timeStr}</span></div>
           </div>
-          <a className="image" href={this.props.data.image} target='_new'>
-            <img src={this.props.data.image} />
+          <a className="image" href={this.props.data.imageUrl} target='_new'>
+            <img src={this.props.data.previewImageUrl} />
           </a>
           <div className="content">
             <div className="description">

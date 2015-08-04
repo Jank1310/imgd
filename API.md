@@ -173,8 +173,8 @@ Response if the post is successfully added to the channel.
               "message": "Some message",
               "imageId": "IMAGE_ID",
               "imageUrl": "url of image"
-              "streamImageId": "STREAM_IMAGE_ID",
-              "streamImageUrl": "url of smaller version"
+              "previewImageId": "STREAM_IMAGE_ID",
+              "previewImageUrl": "url of smaller version"
             }
 
 # Group Images

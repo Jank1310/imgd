@@ -5,9 +5,10 @@ var redis = require('redis'),
 var request = require('supertest');
 var assert = require('assert');
 var async = require('async');
-
+var fs = require('fs');
 var server = require('../../../src/modules/server');
-var redisFiles = require('../../../src/modules/storage/filesRedis')(redisClient);
+var filesDir = require('tmp').dirSync().name;
+var redisFiles = require('../../../src/modules/storage/filesRedis')(redisClient, filesDir);
 
 describe('imageRoutes', function() {
   var app;
@@ -32,8 +33,8 @@ describe('imageRoutes', function() {
       .end(function(err, response) {
         assert(response.body.imageId, 'set image id');
         assert(response.body.imageUrl, 'set image url');
-        assert(response.body.streamImageId, 'set small image id');
-        assert(response.body.streamImageUrl, 'set small image url');
+        assert(response.body.previewImageId, 'set small image id');
+        assert(response.body.previewImageUrl, 'set small image url');
         done();
       });
   });
@@ -42,11 +43,20 @@ describe('imageRoutes', function() {
     this.slow(2000);
     request(app)
       .post('/api/images/')
+      .on('error', done)
       .attach('image', './test/fixtures/test_image_1.jpg')
       .end(function(err, res) {
         async.parallel([
-          function(cb) { request(app).get(res.body.imageUrl).expect(200).expect('Content-Type', /jpeg/).end(cb); },
-          function(cb) { request(app).get(res.body.streamImageUrl).expect(200).expect('Content-Type', /jpeg/).end(cb); }
+          function(cb) {
+            request(app).get(res.body.imageUrl).expect(200).expect('Content-Type', /jpeg/).end(function(_err, resp) {
+               fs.readFile('./test/fixtures/test_image_1.jpg', function(__err, data) {
+                 assert.ifError(__err);
+                 assert.equal(resp.body.length, data.length);
+                 cb();
+               });
+            });
+          },
+          function(cb) { request(app).get(res.body.previewImageUrl).expect(200).expect('Content-Type', /jpeg/).end(cb); }
         ], done);
       });
   });

@@ -4,9 +4,9 @@ var serverError = require('./serverError');
 var gm = require('gm');
 var tmp = require('tmp');
 var async = require('async');
-var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var extra = require('fs-extra');
 
 var acceptedFileFormats = ['JPEG', 'JPG', 'PNG', 'GIF'];
 
@@ -22,13 +22,12 @@ module.exports = function(filesStorage) {
   }
 
   function saveSmallImage(sourceImage, callback) {
-    tmp.file(function(err, filePath, fd) {
-      var stream = gm(sourceImage).resize(1080).stream();
-      stream.on('end', function() {
-          filesStorage.save(filePath, callback);
+    tmp.file(function(err, filePath) {
+      if(err) { return callback(err); }
+      gm(sourceImage).resize(1080).write(filePath, function(_err) {
+        if(_err) { return callback(_err); }
+        filesStorage.save(filePath, callback);
       });
-      var output = fs.createWriteStream(filePath, {fd: fd});
-      stream.pipe(output);
     });
   }
 
@@ -47,12 +46,15 @@ module.exports = function(filesStorage) {
         function(done) { saveImage(imagePath, done); },
         function(done) { saveSmallImage(imagePath, done); }
       ], function(_err, results) {
-        if(_err) { return serverError(req, res, err); }
-        res.json({
-          imageId: results[0],
-          imageUrl: path.join('/api/images/', results[0]),
-          streamImageId: results[1],
-          streamImageUrl: path.join('/api/images/', results[1])
+        if(_err) { return serverError(req, res, _err); }
+        extra.remove(req.file.path, function(__err) {
+          if(_err) { return serverError(req, res, __err); }
+          res.json({
+            imageId: results[0],
+            imageUrl: path.join('/api/images/', results[0]),
+            previewImageId: results[1],
+            previewImageUrl: path.join('/api/images/', results[1])
+          });
         });
       });
     });

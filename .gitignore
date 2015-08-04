@@ -33,3 +33,6 @@ dist
 /src/main.js
 
 bower_components/
+
+# Runtime file storage
+.files/

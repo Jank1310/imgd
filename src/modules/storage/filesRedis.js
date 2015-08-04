@@ -1,25 +1,29 @@
 'use strict';
 var uuid = require('node-uuid');
 var fs = require('fs');
-var Readable = require('stream').Readable;
-
-var fileStorageHashKey = 'files';
+var extra = require('fs-extra');
+var path = require('path');
+var redisConfig = require('./redisConfiguration');
 
 /*
  * This is a simple storage implementation which uses the file system
  * to store data
  */
-var filesRedis = function(redisClient) {
+var filesRedis = function(redisClient, filesDirectory) {
   /*
    * Saves a file and returns an access key
   */
   function save(sourceFile, callback) {
     var fileId = uuid.v4();
-    fs.readFile(sourceFile, 'utf8', function (err, data) {
-      if (err) { return callback(err); }
-      redisClient.hset(fileStorageHashKey, fileId, data, function(_err) {
-        if(_err) { return callback(_err); }
-        return callback(null, fileId);
+    var fileStoragePath = path.join(filesDirectory, fileId);
+    extra.ensureDir(filesDirectory, function(err) {
+      if(err) { return callback(err); }
+      extra.copy(sourceFile, fileStoragePath, function(_err) {
+        if (_err) { return callback(_err); }
+        redisClient.sadd(redisConfig.FILES_SET, fileId, function(__err) {
+          if (__err) { return callback(__err); }
+          return callback(null, fileId);
+        });
       });
     });
   }
@@ -28,7 +32,7 @@ var filesRedis = function(redisClient) {
    * Check if a file exists
    */
   function exists(fileId, callback) {
-    redisClient.hexists(fileStorageHashKey, fileId, function(err, result) {
+    redisClient.sismember(redisConfig.FILES_SET, fileId, function(err, result) {
       if (err) { return callback(err); }
       var _exists = result === 1;
       callback(null, _exists);
@@ -44,20 +48,17 @@ var filesRedis = function(redisClient) {
      if(_exists === false) {
        return callback('File with id: ' + fileId + ' does not exist');
      }
-     redisClient.hget(fileStorageHashKey, fileId, function(_err, data) {
-       if (_err) { return callback(_err); }
-       var s = new Readable();
-       s.push(data); // the string you want
-       s.push(null); // indicates end-of-file basically - the end of the stream
-       return callback(null, s);
-    });
+     var filePath = path.join(filesDirectory, fileId);
+     var readStream = fs.createReadStream(filePath);
+     return callback(null, readStream);
    });
   }
 
   return {
     save: save,
     exists: exists,
-    getFileStream: getFileStream
+    getFileStream: getFileStream,
+    imagesUrlPrefix: '/api/images'
   };
 };
 

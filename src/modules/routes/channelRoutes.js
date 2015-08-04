@@ -3,6 +3,8 @@
 var async = require('async');
 var serverError = require('./serverError');
 var validator = require('validator');
+var _ = require('underscore');
+var path = require('path');
 
 module.exports = function(channels, posts, files) {
   return {
@@ -25,6 +27,10 @@ module.exports = function(channels, posts, files) {
             if(_err) {
               return res.status(500).send('Something broke!');
             }
+            _.each(postsArray, function(post) {
+              post.imageUrl = path.join(files.imagesUrlPrefix, post.imageId);
+              post.previewImageUrl = path.join(files.imagesUrlPrefix, post.previewImageId);
+            });
             return res.json({posts: postsArray});
           });
         } else {
@@ -49,6 +55,10 @@ module.exports = function(channels, posts, files) {
         if(err) {
           return res.status(500).send('Something broke!');
         }
+        _.each(postsArray, function(post) {
+          post.imageUrl = path.join(files.imagesUrlPrefix, post.imageId);
+          post.previewImageUrl = path.join(files.imagesUrlPrefix, post.previewImageId);
+        });
         return res.json({posts: postsArray});
       });
     },
