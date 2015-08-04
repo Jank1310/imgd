@@ -13,18 +13,24 @@ describe('posts', function() {
   });
 
   it('should add post to channel', function(done) {
-    posts.addPostToChannel('someChannel', {'message': 'test message'}, function(err, post) {
+    posts.addPostToChannel('someChannel', {'message': 'test message', 'previewImageId': '1234', 'imageId': '4567'}, function(err, post) {
       assert.ifError(err);
       assert.equal(post.message, 'test message', 'should set post message');
       assert.equal(post.channel, 'someChannel', 'should set channel');
+      assert.equal(post.previewImageId, '1234', 'should set preview image id');
+      assert.equal(post.imageId, '4567', 'should set image id');
       done();
     });
   });
 
   it('should add multiple posts and update the correct sorted sets in redis', function(done) {
     var channel = 'theChannel';
-    var postList = [{message: 'test message'}, {message: 'test message2'},
-      {message: 'test message3'}, {message: 'test message4'}];
+    var postList = [
+      {message: 'test message', 'previewImageId': '1234', 'imageId': '4567'},
+      {message: 'test message2', 'previewImageId': '1234', 'imageId': '4567'},
+      {message: 'test message3', 'previewImageId': '1234', 'imageId': '4567'},
+      {message: 'test message4', 'previewImageId': '1234', 'imageId': '4567'}
+    ];
     var checkRedis = function() {
       async.parallel([
         function(cb) {
@@ -44,7 +50,9 @@ describe('posts', function() {
 
   it('should get posts of channel', function(done) {
     var channel = 'someChannel';
-    var postsArr = [{'message': 'test message 1'}, {'message': 'test message 2'}];
+    var postsArr = [
+      {'message': 'test message 1', 'previewImageId': '1234', 'imageId': '4567'},
+      {'message': 'test message 2', 'previewImageId': '1234', 'imageId': '4567'}];
     async.eachSeries(postsArr, function(item, cb) {
       posts.addPostToChannel(channel, item, cb);
     }, function() {
@@ -59,7 +67,9 @@ describe('posts', function() {
 
   it('should add and get posts to global list', function(done) {
     var channel = 'someChannel';
-    var postsArr = [{'message': 'test message 1'}, {'message': 'test message 2'}];
+    var postsArr = [
+      {'message': 'test message 1', 'previewImageId': '1234', 'imageId': '4567'},
+      {'message': 'test message 2', 'previewImageId': '1234', 'imageId': '4567'}];
     async.eachSeries(postsArr, function(item, cb) {
       posts.addPostToChannel(channel, item, cb);
     }, function() {

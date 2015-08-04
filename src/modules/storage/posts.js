@@ -8,7 +8,6 @@ var isSafeInteger = require('validate.io-safe-integer');
 var DEFAULT_POST_LIMIT = 20;
 
 var posts = function(redisClient) {
-
   function _addPostIdToChannel(postId, channel, callback) {
     var channelPostsKey = redisConfig.CHANNEL_PREFIX + channel + redisConfig.CHANNEL_POSTS_POSTFIX;
     redisClient.zadd(channelPostsKey, postId, postId, function(err) {
@@ -31,13 +30,18 @@ var posts = function(redisClient) {
 
   function addPostToChannel(channel, post, cb) {
     var ts = moment().unix();
+    if(!post.imageId || !post.previewImageId || !post.message) {
+      return cb('missing keys in post');
+    }
     redisClient.incr(redisConfig.POSTS_ID_KEY, function(err, postId) {
       if(err) { return cb(err); }
       var postContent = {
         id: postId,
         message: post.message,
         created: ts,
-        channel: channel
+        channel: channel,
+        imageId: post.imageId,
+        previewImageId: post.previewImageId
       };
       var postKey = redisConfig.POSTS_PREFIX + postId;
       redisClient.hmset(postKey, postContent, function(_err) {

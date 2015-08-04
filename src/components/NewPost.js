@@ -2,7 +2,7 @@
 
 var React = require('react/addons');
 var Reflux = require('reflux');
-var DropzoneComponent = require('react-dropzone-component');
+var Dropzone = require('react-dropzone');
 var classNames = require('classnames');
 
 var Actions = require('actions/PostsActionCreators');
@@ -24,7 +24,10 @@ var NewPost = React.createClass({
   getInitialState: function() {
     return {
       posting: false,
-      postError: false
+      postError: false,
+      addedImage: false,
+      imagePreview: null,
+      imageFile: null
     };
   },
 
@@ -42,10 +45,12 @@ var NewPost = React.createClass({
   },
 
   handlePost: function() {
-    var message = React.findDOMNode(this.refs.message).value;
-    var channel = React.findDOMNode(this.refs.channel).value;
-    this.setState({posting: true, postError: false});
-    Actions.postToChannel(channel, message);
+    if(!this.state.posting && this.state.addedImage) {
+      var message = React.findDOMNode(this.refs.message).value;
+      var channel = React.findDOMNode(this.refs.channel).value;
+      this.setState({posting: true, postError: false});
+      Actions.postToChannel(channel, message, this.state.imageFile);
+    }
   },
 
   postToChannelCompleted: function() {
@@ -65,48 +70,34 @@ var NewPost = React.createClass({
     this.setState({channel: event.target.value});
   },
 
-  onAddedFile: function(files) {
-    console.log("Added", files);
-    this.setState({file: files[0]});
+  onDrop: function(files) {
+    console.log(files[0]);
+    this.setState({
+      addedImage: true,
+      imagePreview: files[0].preview,
+      imageFile: files[0]
+    });
   },
 
-  onDrop: function(param) {
-    console.log("Drop", param);
+  handleRemoveImage: function() {
+    this.setState({addedImage: false, imagePreview: null, imageFile: null});
+  },
+
+  componentDidUpdate: function() {
+    $('#previewImage').dimmer({
+      on: 'hover'
+    });
   },
 
   render: function () {
+    var submitButtonClasses = classNames('ui', 'primary', {'disabled': !this.state.addedImage}, {'loading': this.state.posting}, 'button');
     var postButton = (
-      <button onClick={this.handlePost} className="ui primary button">
+      <button onClick={this.handlePost} className={submitButtonClasses}>
         Post
       </button>
     );
-    if(this.state.posting) {
-      postButton = (
-        <button onClick={this.handlePost} className="ui primary loading button">
-          Post
-        </button>
-      );
-    }
-
-/*
-    var image = (
-      <div>
-        <h2 className="ui center aligned icon header">
-          <i className="circular photo icon"></i>
-          Select image
-        </h2>
-      </div>);
-    if(this.state.file) {
-      image = (
-        <div className="image">
-          <img width='100%' src={this.state.file.preview} />
-        </div>
-      );
-    }
-*/
 
     var formClasses = classNames('ui', {'error': this.state.postError}, 'form');
-
     var error;
     if(this.state.postError === true) {
       error = (
@@ -117,19 +108,30 @@ var NewPost = React.createClass({
        );
     }
 
-    var dropzoneConfig = {
-      allowedFiletypes: ['.jpg', '.png', '.gif'],
-      showFiletypeIcon: true,
-      maxFiles: 1,
-      postUrl: '',
-      url: '',
-      autoProcessQueue: false
-    };
-
-    var dropzoneEventHandlers = {
-      addedfile: this.onAddedFile,
-      drop: this.onDrop
-    };
+    var dropzoneContent = null;
+    if(this.state.addedImage) {
+      dropzoneContent = (
+        <div id="previewImage" className="blurring dimmable image">
+          <div className="ui dimmer">
+            <div className="content">
+              <div className="center">
+                <div className="ui inverted icon button" onClick={this.handleRemoveImage}><i className="remove circle outline icon"></i> Remove</div>
+              </div>
+            </div>
+          </div>
+          <img className="image" style={{width: '100%'}} src={this.state.imagePreview}/>
+        </div>
+      );
+    } else {
+      dropzoneContent = (
+        <Dropzone ref="dropzone" className="clickable" accept='image/*' onDrop={this.onDrop}>
+          <div className="ui center aligned icon header">
+            <i className="circular photo icon"></i>
+            Select image
+          </div>
+        </Dropzone>
+      );
+    }
 
     return (
       <div className="ui card">
@@ -142,10 +144,7 @@ var NewPost = React.createClass({
             </div>
             <div className="field">
               <label>Image</label>
-              <DropzoneComponent
-                config={dropzoneConfig}
-                eventHandlers={dropzoneEventHandlers}
-                />
+                {dropzoneContent}
             </div>
             <div className="field">
                <label>Message</label>
@@ -161,7 +160,7 @@ var NewPost = React.createClass({
          </div>
        </div>
       </div>
-      );
+    );
   }
 });
 

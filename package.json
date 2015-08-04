@@ -57,7 +57,7 @@
     "mv": "^2.1.1",
     "node-uuid": "^1.4.3",
     "react": "0.13.x",
-    "react-dropzone-component": "^0.4.4",
+    "react-dropzone": "^1.2.4",
     "react-router": "0.13.x",
     "redis": "^0.12.1",
     "reflux": "^0.2.7",
