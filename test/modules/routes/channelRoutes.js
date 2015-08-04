@@ -14,6 +14,7 @@ describe('channelRoutes', function() {
   var filesStorage;
   var filesStorageExistsStub;
   var defaultPost = {message: 'some message 2', imageId: 'someImageId', previewImageId: 'somePreviewImageId'};
+  var defaultChannel = 'someDefaultChannel';
 
   beforeEach(function(done) {
     filesStorage = { exists: function() {}, imagesUrlPrefix: '/api/images' };
@@ -67,10 +68,19 @@ describe('channelRoutes', function() {
           .expect(200, done);
   });
 
+  var assertAddedDefaultPost = function(resp) {
+    console.log(resp.body);
+    assert.equal(resp.body.message, defaultPost.message);
+    assert.equal(resp.body.imageId, defaultPost.imageId);
+    assert.equal(resp.body.previewImageId, defaultPost.previewImageId);
+    assert.equal(resp.body.imageUrl, path.join(filesStorage.imagesUrlPrefix, defaultPost.imageId));
+    assert.equal(resp.body.previewImageUrl, path.join(filesStorage.imagesUrlPrefix, defaultPost.previewImageId));
+    assert.equal(resp.body.channel, defaultChannel, 'should sent channel name');
+  };
+
   it('should post and return posts', function(done) {
-    var channel = 'someChannel3';
     request(app)
-      .post('/api/c/' + channel)
+      .post('/api/c/' + defaultChannel)
       .on('error', done)
       .send(defaultPost)
       .end(function(err, res){
@@ -78,7 +88,7 @@ describe('channelRoutes', function() {
         assert.deepEqual(res.body.message, defaultPost.message);
         assert.ok(filesStorageExistsStub.called);
         request(app)
-              .get('/api/c/' + channel)
+              .get('/api/c/' + defaultChannel)
               .on('error', done)
               .expect('Content-Type', /json/)
               .expect(function(resp) {
@@ -89,28 +99,47 @@ describe('channelRoutes', function() {
                 assert.equal(resp.body.posts[0].previewImageId, defaultPost.previewImageId);
                 assert.equal(resp.body.posts[0].imageUrl, path.join(filesStorage.imagesUrlPrefix, defaultPost.imageId));
                 assert.equal(resp.body.posts[0].previewImageUrl, path.join(filesStorage.imagesUrlPrefix, defaultPost.previewImageId));
-                assert.equal(resp.body.posts[0].channel, channel, 'should sent channel name');
+                assert.equal(resp.body.posts[0].channel, defaultChannel, 'should sent channel name');
               })
               .expect(200, done);
        });
    });
 
+   it('should post to existing channel', function(done) {
+     request(app)
+        .post('/api/c/' + defaultChannel)
+        .on('error', done)
+        .send(defaultPost)
+        .expect(assertAddedDefaultPost)
+        .end(function(err, resp) {
+          assert.ifError(err);
+          request(app)
+               .post('/api/c/' + defaultChannel)
+               .on('error', done)
+               .send(defaultPost)
+               .expect(assertAddedDefaultPost)
+               .end(function(_err) {
+                 assert.ifError(_err);
+                 assert.ok(filesStorageExistsStub.called);
+                 done(_err);
+               });
+        });
+    });
+
    it('should not post when image id or previewImageId is wrong', function(done) {
      filesStorageExistsStub.withArgs('someImageId').callsArgWith(1, null, false);
      filesStorageExistsStub.withArgs('somePreviewImageId').callsArgWith(1, null, false);
-     var channel = 'someChannel3';
      request(app)
-           .post('/api/c/' + channel)
+           .post('/api/c/' + defaultChannel)
            .on('error', done)
            .send(defaultPost)
            .expect(400)
            .end(done);
    });
 
-   it('should post and return global posts', function(done) {
-     var channel = 'someChannel3';
+   it('should add posts to global and return global posts', function(done) {
      request(app)
-           .post('/api/c/' + channel)
+           .post('/api/c/' + defaultChannel)
            .on('error', done)
            .send(defaultPost)
            .end(function() {
@@ -126,7 +155,7 @@ describe('channelRoutes', function() {
                      assert.equal(resp.body.posts[0].previewImageId, defaultPost.previewImageId);
                      assert.equal(resp.body.posts[0].imageUrl, path.join(filesStorage.imagesUrlPrefix, defaultPost.imageId));
                      assert.equal(resp.body.posts[0].previewImageUrl, path.join(filesStorage.imagesUrlPrefix, defaultPost.previewImageId));
-                     assert.equal(resp.body.posts[0].channel, channel, 'should sent channel name');
+                     assert.equal(resp.body.posts[0].channel, defaultChannel, 'should sent channel name');
                    })
                    .expect(200, done);
             });

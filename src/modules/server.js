@@ -3,6 +3,7 @@
 var server = function(redisClient, fileStorage) {
   var express = require('express');
   var app = express();
+  var responseTime = require('response-time');
   var bodyParser = require('body-parser');
   var channels = require('./storage/channels')(redisClient);
   var posts = require('./storage/posts')(redisClient);
@@ -19,7 +20,7 @@ var server = function(redisClient, fileStorage) {
 
   // middleware
   app.use(bodyParser.json()); // for parsing application/json
-
+  app.use(responseTime());
   var isProduction = process.env.NODE_ENV === 'production';
 
   if(!isProduction) {

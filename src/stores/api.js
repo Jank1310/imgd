@@ -42,18 +42,22 @@ var postToChannel = function(channel, message, image, callback) {
     return callback('Cannot post to global channel. Channel is null or undefined!');
   }
   var imageUrl = '/api/images';
-  agent.post(imageUrl).attach('image', image).end(function _postedImage(err, res) {
-    if(err) { return callback(err); }
-    var imageId = res.body.imageId;
-    var previewImageId = res.body.previewImageId;
-    var url = '/api/c/' + channel;
-    agent.post(url)
-      .send({message: message, imageId: imageId, previewImageId: previewImageId})
-      .end(function _postedPost(_err, _res) {
-        if(_err) { return callback(_err); }
-        return callback(null, _res.body);
+  agent.post(imageUrl)
+    .on('error', handleAPIError)
+    .attach('image', image)
+    .end(function _postedImage(err, res) {
+        if(err) { return callback(err); }
+        var imageId = res.body.imageId;
+        var previewImageId = res.body.previewImageId;
+        var url = '/api/c/' + channel;
+        agent.post(url)
+          .on('error', handleAPIError)
+          .send({message: message, imageId: imageId, previewImageId: previewImageId})
+          .end(function _postedPost(_err, _res) {
+            if(_err) { return callback(_err); }
+            return callback(null, _res.body);
+        });
     });
-  });
 };
 
 module.exports.getRecentChannels = getRecentChannels;

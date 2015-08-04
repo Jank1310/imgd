@@ -86,7 +86,9 @@ module.exports = function(channels, posts, files) {
         channels.channelExists(req.params.channel, function(err, exists) {
           if(err) { return callback(err); }
           if(exists === false) {
-            channels.createChannel(req.params.channel, callback);
+            return channels.createChannel(req.params.channel, callback);
+          } else {
+            return callback();
           }
         });
       };
@@ -94,6 +96,8 @@ module.exports = function(channels, posts, files) {
       var createPost = function(callback) {
         posts.addPostToChannel(req.params.channel, req.body, function(err, newPost) {
           if(err) { return callback(err); }
+          newPost.imageUrl = path.join(files.imagesUrlPrefix, newPost.imageId);
+          newPost.previewImageUrl = path.join(files.imagesUrlPrefix, newPost.previewImageId);
           return callback(null, newPost);
         });
       };
