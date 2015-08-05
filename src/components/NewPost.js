@@ -71,7 +71,6 @@ var NewPost = React.createClass({
   },
 
   onDrop: function(files) {
-    console.log(files[0]);
     this.setState({
       addedImage: true,
       imagePreview: files[0].preview,

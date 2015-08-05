@@ -29,7 +29,6 @@ var getPopularChannels = function(callback) {
 var getPostsOfChannel = function(channel, callback) {
   console.log('API: get posts for channel: ' + channel);
   var url = '/api/c/' + (channel ? channel : '');
-  console.log(url);
   agent.get(url).on('error', handleAPIError).end(function(err, res) {
     if(err) { return callback(err); }
     return callback(null, res.body.posts);

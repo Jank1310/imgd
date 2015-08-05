@@ -74,6 +74,10 @@ var server = function(redisClient, fileStorage) {
   app.get('/api/images/:imageId', imagesRoutes.getImage);
   app.post('/api/images/', upload.single('image'), imagesRoutes.addImage);
 
+
+  //redirect other requests
+  app.all('/*', function(req, res) { res.redirect('/'); });
+
   return app;
 };
 

@@ -12,5 +12,5 @@ var server = require('./src/modules/server').newServer(client, fileStorage);
 var httpServer = server.listen(8080, function () {
   var host = httpServer.address().address;
   var port = httpServer.address().port;
-  console.log('Example app listening at http://%s:%s', host, port);
+  console.log('Imgd listening at http://%s:%s', host, port);
 });

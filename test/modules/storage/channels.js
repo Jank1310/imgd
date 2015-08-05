@@ -20,10 +20,54 @@ describe('channels', function() {
     });
   });
 
-  it('should create channel without error', function(done) {
-    channels.createChannel('newChannel', function(err) {
-      assert.ifError(err);
-      return done();
+  describe('create channel', function() {
+    it('should create channel without error', function(done) {
+      channels.createChannel('newChannel', function(err) {
+        assert.ifError(err);
+        return done();
+      });
+    });
+
+    it('should raise error when space in channel name exists', function(done) {
+      channels.createChannel('newChannel with space', function(err) {
+        assert(err);
+        done();
+      });
+    });
+
+    it('should raise error when space in channel name exists', function(done) {
+      channels.createChannel('newChannel with space', function(err) {
+        assert(err);
+        done();
+      });
+    });
+
+    it('should create channel with underscore', function(done) {
+      channels.createChannel('name_with_underscore', function(err) {
+        assert.ifError(err);
+        done();
+      });
+    });
+
+    it('should raise errer when channel name is len > 25', function(done) {
+      channels.createChannel('afjdfklasdjfasdfjasdflkaas', function(err) {
+        assert(err);
+        done();
+      });
+    });
+
+    it('should raise when channel name is len < 2', function(done) {
+      channels.createChannel('a', function(err) {
+        assert(err);
+        done();
+      });
+    });
+
+    it('should raise when channel name contains special chars', function(done) {
+      channels.createChannel('some&awkward%20§channel', function(err) {
+        assert(err);
+        done();
+      });
     });
   });
 

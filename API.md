@@ -115,7 +115,7 @@ Returns the recent channels sort by creation time
 ## Channels [/c/{channel}{?before}{?count}]
 
 + Parameters
-    + channel (string, optional) - name of the channel
+    + channel (string, optional) - name of the channel.
     + before (string, optional) - select from which post to start
     + count (integer, optional) - number posts max 100
 
@@ -145,7 +145,7 @@ If no channel is given, a list of global posts (from all channels) is returned.
 Adding a post to an non existent channel will "create" the channel.
 
 + Parameters
-    + channel (string, optional) - name of the channel
+    + channel (string, optional) - name of the channel. 1 < Len < 26, only alphanumeric + underscore.
 
 ### POST
 + Request (application/json)

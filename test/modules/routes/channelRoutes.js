@@ -8,6 +8,7 @@ var assert = require('assert');
 var async = require('async');
 var sinon = require('sinon');
 var path = require('path');
+var _ = require('underscore');
 
 describe('channelRoutes', function() {
   var app;
@@ -69,7 +70,6 @@ describe('channelRoutes', function() {
   });
 
   var assertAddedDefaultPost = function(resp) {
-    console.log(resp.body);
     assert.equal(resp.body.message, defaultPost.message);
     assert.equal(resp.body.imageId, defaultPost.imageId);
     assert.equal(resp.body.previewImageId, defaultPost.previewImageId);
@@ -111,7 +111,7 @@ describe('channelRoutes', function() {
         .on('error', done)
         .send(defaultPost)
         .expect(assertAddedDefaultPost)
-        .end(function(err, resp) {
+        .end(function(err) {
           assert.ifError(err);
           request(app)
                .post('/api/c/' + defaultChannel)
@@ -124,7 +124,22 @@ describe('channelRoutes', function() {
                  done(_err);
                });
         });
-    });
+  });
+
+  it('should escape post message', function(done) {
+    var modifiedPost = _.clone(defaultPost);
+    modifiedPost.message = '<b>some html content</b>';
+
+    request(app)
+       .post('/api/c/' + defaultChannel)
+       .on('error', done)
+       .send(modifiedPost)
+       .end(function(err, resp) {
+         assert.ifError(err);
+         assert.equal('some html content', resp.body.message, 'should remove html tags');
+         done();
+       });
+   });
 
    it('should not post when image id or previewImageId is wrong', function(done) {
      filesStorageExistsStub.withArgs('someImageId').callsArgWith(1, null, false);

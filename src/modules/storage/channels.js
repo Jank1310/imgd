@@ -3,16 +3,23 @@
 var redisConfig = require('./redisConfiguration');
 var moment = require('moment');
 var async = require('async');
+var validator = require('validator');
 
 var channels = function(redisClient) {
+  function channelNameValid(channel) {
+    return !validator.matches(channel, /[\s\W]/)
+          && validator.isLength(channel, 2, 25);
+  }
+
   function saveChannel(channel, cb) {
+    if(!channelNameValid(channel)) {
+      return cb('Channel name not valid');
+    }
     async.parallel([
-      function(done) {
-        //save in scored set
+      function saveInScoredSet(done) {
         redisClient.zadd(redisConfig.CHANNELS_SET, 1, channel, done);
       },
-      function(done) {
-        //save in sort by time set
+      function saveInSortByTimeSet(done) {
         redisClient.zadd(redisConfig.CHANNELS_SORT_BY_LAST_POST, moment().unix(), channel, done);
       }], cb);
   }

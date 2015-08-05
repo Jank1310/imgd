@@ -5,6 +5,7 @@ var serverError = require('./serverError');
 var validator = require('validator');
 var _ = require('underscore');
 var path = require('path');
+var _string = require('underscore.string');
 
 module.exports = function(channels, posts, files) {
   return {
@@ -94,7 +95,12 @@ module.exports = function(channels, posts, files) {
       };
 
       var createPost = function(callback) {
-        posts.addPostToChannel(req.params.channel, req.body, function(err, newPost) {
+        var post = {
+          message: _string.stripTags(req.body.message),
+          imageId: req.body.imageId,
+          previewImageId: req.body.previewImageId
+        };
+        posts.addPostToChannel(req.params.channel, post, function(err, newPost) {
           if(err) { return callback(err); }
           newPost.imageUrl = path.join(files.imagesUrlPrefix, newPost.imageId);
           newPost.previewImageUrl = path.join(files.imagesUrlPrefix, newPost.previewImageId);
