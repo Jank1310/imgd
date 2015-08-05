@@ -38,6 +38,8 @@ var server = function(redisClient, fileStorage) {
     app.all('/', serveIndex);
     app.all('/c/:channel', serveIndex);
     app.all('/newPost', serveIndex);
+    app.all('/signup', serveIndex);
+    app.all('/login', serveIndex);
     //serve assets from the webpack server
     app.all('/assets/*', function (req, res) {
       proxy.web(req, res, {

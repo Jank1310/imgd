@@ -8,12 +8,15 @@ var Post = require('components/Post');
 var PostsStore = require('stores/PostsStore');
 var PostsActions = require('actions/PostsActionCreators');
 
+var UserStore = require('stores/UserStore');
+
 require('styles/Channel.scss');
 var paragraphImage = require('../images/short-paragraph.png');
 
 var Channel = React.createClass({
   mixins: [
     Reflux.connect(PostsStore, 'postStore'),
+    Reflux.connect(UserStore, 'userStore'),
     Router.Navigation
   ],
 
@@ -33,6 +36,14 @@ var Channel = React.createClass({
 
   loadPosts: function(channel) {
     PostsActions.getPostsOfChannel(channel);
+  },
+
+  handleSignup: function() {
+    this.transitionTo('/signup', {channel: this.props.params.channel});
+  },
+
+  handleLogin: function() {
+    this.transitionTo('/login', {channel: this.props.params.channel});
   },
 
   render: function () {
@@ -73,15 +84,30 @@ var Channel = React.createClass({
       }
     }
 
+    var actionButton = (
+      <div className="fluid">
+        <div className="ui fluid center aligned buttons">
+          <button className="ui blue button" onClick={this.handleSignup}>Sign up</button>
+          <div className="or"></div>
+          <button className="ui black button" onClick={this.handleLogin}>Log in</button>
+        </div>
+      </div>
+    );
+    if(this.state.userStore.loggedIn) {
+      actionButton = (
+        <div onClick={this.handleNewPost} className="fluid ui blue button">
+          <i className="add icon"></i>
+          Post image
+       </div>
+     );
+    }
+
     return (
         <div className="channel">
           <h2>{channelName}</h2>
-          <div onClick={this.handleNewPost} className="fluid ui blue button">
-            <i className="add icon"></i>
-            Post image
-         </div>
-         <div className="ui divider"></div>
-         {channelContent}
+          {actionButton}
+          <div className="ui divider"></div>
+          {channelContent}
         </div>
       );
   }
